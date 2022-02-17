@@ -143,43 +143,31 @@
 					children: [
 						{
 							text: '8:30-9:30',
-							value: d + " 10:00~" + d + " 11:00"
+							value: d + " 8:00~" + d + " 9:00"
 						},
 						{
 							text: "10:00-11:00",
-							value: {
-								time: d + " 10:00~" + d + " 11:00"
-							}
+							value: d + " 10:00~" + d + " 11:00"
 						},
 						{
 							text: "13:30-14:30",
-							value: {
-								time: d + " 13:30~" + d + " 14:30"
-							}
+							value: d + " 13:30~" + d + " 14:30"
 						},
 						{
 							text: "15:00-16:00",
-							value: {
-								time: d + " 15:00~" + d + " 16:00"
-							}
+							value: d + " 15:00~" + d + " 16:00"
 						},
 						{
 							text: "18:00-19:00",
-							value: {
-								time: d + " 18:00~" + d + " 19:00"
-							}
+							value: d + " 18:00~" + d + " 19:00"
 						},
 						{
 							text: "19:30-20:30",
-							value: {
-								time: d + " 19:30~" + d + " 20:30"
-							}
+							value: d + " 19:30~" + d + " 20:30"
 						},
 						{
 							text: "21:00-22:00",
-							value: {
-								time: d + " 21:00~" + d + " 22:00"
-							}
+							value: d + " 21:00~" + d + " 22:00"
 						}
 					]
 				})
@@ -203,7 +191,6 @@
 		},
 		methods: {
 			questionOptionChange(e) {
-				console.log(this.periods)
 				var questionExistMap = new Map()
 				var questionList = this.showQuestionList
 				questionList.forEach(item => {

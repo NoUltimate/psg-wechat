@@ -1,6 +1,7 @@
 import { getToken } from "@/utils/auth.js"
 // 单独配置url地址，便于以后维护
 const BASE_URL = 'https://noultimate.com:7010/psg/api/wechat'
+//const BASE_URL = 'https://127.0.0.1:7010/psg/api/wechat'
 // 暴露一个方法，用uni.request发送请求，异步处理的封装最好用promise
 export const request = (options)=>{
 	// resolve（成功之后的回调函数）和reject（失败之后的回调函数）

@@ -39,8 +39,7 @@
 		},
 		onLoad(e) {
 			that = this
-			var subscribeData = JSON.parse(e.subscribeData)
-			this.id = subscribeData.id
+			this.id = e.subscribeId
 		},
 		methods: {
 			submit: function() {

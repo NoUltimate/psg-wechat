@@ -4,8 +4,8 @@
 	    <image class="userinfo-avatar" src="../../static/img/user/xinli.png" mode="cover"></image>
 	    <text class="userinfo-nickname">{{userInfo.nickName}}</text>
 	  </view>
-	  <view style="width:200rpx; margin-left: 260rpx;margin-top: 100px;" v-if="!isRegister">
-	  	<button @getuserinfo="getUserInfo" open-type="getUserInfo" type="primary" style="margin-top: 200px;"> 进入 </button>
+	  <view style="width:200rpx; margin-left: 260rpx;margin-top: 100px;">
+	  	<button @click="getUserProfile"  type="primary" style="margin-top: 200px;"> 进入 </button>
 	  </view>
 	</view>
 </template>
@@ -17,20 +17,63 @@
 	export default {
 		data() {
 			return {
+				userInfo: {},
+				hasUserInfo: false,
+				canIUseGetUserProfile: false,
 				isRegister: true,
 				title: 'Hello'
 			}
 		},
 		onLoad() {
 			that = this
-			var systemInfo = uni.getSystemInfoSync()
-			if (!systemInfo.app) {
-				systemInfo.app = "wechat"
-			}
-			uni.login({
-				success(res) {
+			that.userLogin()
+			// uni.login({
+			// 	success(res) {
+			// 		getOpenid(getApp().globalData.appId, getApp().globalData.secret, res.code, systemInfo.app).then(resp => {
+			// 			var getUserInfoFlag = that.getUserInfo()
+			// 			var openid = resp.data.openid
+			// 			getApp().globalData.openid = openid
+			// 			if (resp.code == 400001) {
+			// 				that.isRegister = false
+			// 				getApp().globalData.isRegister = false
+			// 			} else if (resp.code == 400002) {
+			// 				getApp().globalData.token = resp.data.token
+			// 				getApp().globalData.id = resp.data.user.id
+			// 				getApp().globalData.role = resp.data.user.role
+			// 				getApp().globalData.isRegister = true
+			// 				if (systemInfo.app == "DingTalk") {
+			// 					uni.switchTab({
+			// 						url:"/pages/user/user"
+			// 					})
+			// 				}else if (!getUserInfoFlag) {
+			// 					that.isRegister = false
+			// 				} else {
+			// 					uni.switchTab({
+			// 						url:"/pages/user/user"
+			// 					})
+			// 				}
+			// 			}
+			// 		})
+			// 	}
+			// })
+		},
+		methods: {
+			login: function() {
+				return new Promise((resolve,reject)=>{
+					uni.login({
+						success(res) {
+							resolve(res)
+						}
+					})
+				})
+			},
+			userLogin: function() {
+				that.login().then(res => {
+					var systemInfo = uni.getSystemInfoSync()
+					if (!systemInfo.app) {
+						systemInfo.app = "wechat"
+					}
 					getOpenid(getApp().globalData.appId, getApp().globalData.secret, res.code, systemInfo.app).then(resp => {
-						var getUserInfoFlag = that.getUserInfo()
 						var openid = resp.data.openid
 						getApp().globalData.openid = openid
 						if (resp.code == 400001) {
@@ -41,25 +84,16 @@
 							getApp().globalData.id = resp.data.user.id
 							getApp().globalData.role = resp.data.user.role
 							getApp().globalData.isRegister = true
-							if (systemInfo.app == "DingTalk") {
-								uni.switchTab({
-									url:"/pages/user/user"
-								})
-							}else if (!getUserInfoFlag) {
-								that.isRegister = false
-							} else {
-								uni.switchTab({
-									url:"/pages/user/user"
-								})
-							}
+							uni.switchTab({
+								url:"/pages/user/user"
+							})
 						}
 					})
-				}
-			})
-		},
-		methods: {
-			getUserInfo: function() {
-				uni.getUserInfo({
+				})
+			},
+			getUserProfile: function() {
+				uni.getUserProfile({
+					desc:'登录',
 					success(e) {
 						var userInfo = e.userInfo
 						getApp().globalData.userInfo = userInfo
@@ -68,7 +102,8 @@
 						})
 						return true
 					},
-					fail() {
+					fail(e) {
+						console.log(e)
 						wx.showToast({
 							title: "请先授权"
 						})

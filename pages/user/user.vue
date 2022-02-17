@@ -194,6 +194,7 @@
 				this.$showLoading('加载中')
 				var statusList = []
 				statusList.push(1)
+				this.role = getApp().globalData.role
 				subscribeApi.getSubscribeByRole(statusList).then(resp => {
 					var subscribeList = resp.data
 					if (subscribeList.length > 0) {
@@ -277,7 +278,7 @@
 					})
 				} else if (optionIndex == 2){
 					uni.navigateTo({
-						url:'../user_subscribe_finish/user_subscribe_finish?subscribeData=' + JSON.stringify(data) + '&subscribeTime=' + periodIndex
+						url:'../user_subscribe_finish/user_subscribe_finish?subscribeId=' + data.id
 					})
 				}
 			}
