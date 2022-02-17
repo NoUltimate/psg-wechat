@@ -121,15 +121,6 @@
             }
             
         }
-        ,{
-            "path" : "pages/user_subscribe_cancel/user_subscribe_cancel",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

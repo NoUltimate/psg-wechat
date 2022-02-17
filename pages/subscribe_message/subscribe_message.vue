@@ -186,7 +186,6 @@
 					if (order == null || order == "") continue
 					this.showQuestionList.push(questionList[index])
 				}
-				console.log(this.showQuestionList)
 			})
 		},
 		methods: {
@@ -236,7 +235,6 @@
 			    })
 			},
 			submit: function(ref) {
-				console.log(this.periods)
 				// this.$refs.form.validate([],(err,value)=>{
 				// 	if (!err) {
 						uni.showModal({

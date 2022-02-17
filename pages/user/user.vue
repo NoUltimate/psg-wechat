@@ -92,6 +92,15 @@
 				</u-col>
 			</u-row>
 		</view>
+		<u-modal v-model="show" :show-cancel-button="true" confirm-text="确认"
+			title="请选择取消理由" @cancel="cancel" @confirm="confirmCancelReason">
+			<view style="margin-top: auto;">
+				<uni-data-picker v-model="reason" :localdata="selectReasons" popup-title="请选择预约时间" @change="change" @nodeclick="onnodeclick"></uni-data-picker>
+			</view>
+			<view v-if="reason == '其他理由'">
+				<uni-easyinput type="textarea" autoHeight v-model="customReason" placeholder="请输入取消预约理由"></uni-easyinput>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -102,6 +111,7 @@
 		data() {
 			return {
 				role: getApp().globalData.role,
+				selectSubscribeId: "",
 				isNomalUser: true,
 				hasSubscribe: false,
 				subscribeMap: undefined,
@@ -140,7 +150,11 @@
 							backgroundColor: '#00aa00'
 						}
 					}
-				]
+				],
+				show: false,
+				reason: "",
+				customReason: "",
+				selectReasons : []
 			}
 		},
 		onLoad() {
@@ -148,6 +162,21 @@
 			if (getApp().globalData.isRegister) {
 				this.refreshSubscribeList()
 			}
+			// todo 咨询师和用户的取消理由不一样
+			var reasonList = []
+			if (this.role == 1) {
+				reasonList = ['预约用户没有按时到场', '预约用户没有按时点击完成预约', '预约用户不是本校学生', '时间冲突', '其他理由']
+			} else {
+				reasonList = ['预约时间选错了', '预约时间已经过了', '时间冲突', '其他理由']
+			}
+			reasonList.forEach(reason => {
+				this.selectReasons.push({
+					text: reason,
+					value: reason,
+					children: []
+				})
+			})
+			
 			// // 咨询师没有完成按钮
 			// if (getApp().globalData.role == 1) {
 			// 	var options = [
@@ -235,13 +264,20 @@
 			open: function(index) {
 				
 			},
-			clickCancelReason: function(index) {
-				var cancelReason = this.cancelReasonList[index].text
-				if (cancelReason == '自定义') {
-					
-				}
-				console.log(this.cancelReasonList, cancelReason)
-				subscribeApi.updateSubscribeStatus(this.subscribeData.id, 2, null, null, cancelReason).then(resp => {
+			change(e) {
+				
+			},
+			onnodeclick(e) {
+				
+			},
+			confirmCancelReason: function(index) {
+				console.log(this.reason, this.customReason)
+				var reason = this.reason
+				if (reason == '其他理由') reason = this.customReason
+				subscribeApi.updateSubscribeStatus(this.selectSubscribeId, null, null, null, reason).then(resp => {
+					uni.navigateBack({
+						
+					})
 					that.refreshSubscribeList()
 				})
 			},
@@ -254,28 +290,30 @@
 						url:'../user_subscribe_message/user_subscribe_message?subscribeId=' + data.id
 					})
 				} else if (optionIndex == 1) {
-					uni.showModal({
-						title: '取消预约',
-						content: '确定要取消预约？',
-						showCancel: true,//是否显示取消按钮
-						cancelText:"否",//默认是“取消”
-						cancelColor:'skyblue',//取消文字的颜色
-						confirmText:"是",//默认是“确定”
-						confirmColor: 'skyblue',//确定文字的颜色
-						success: function (res) {
-						    if (res.cancel) {
-						        //点击取消,默认隐藏弹框
-						    } else {
-						        //点击确定，取消预约
-								// subscribeApi.updateSubscribeStatus(data.id, 2, null, null, null).then(resp => {
-								// 	that.refreshSubscribeList()
-								// })
-								that.showCancelReason = true
-						    }
-						},
-						fail: function (res) { },//接口调用失败的回调函数
-						complete: function (res) { },//接口调用结束的回调函数（调用成功、失败都会执行）
-					})
+					this.show = true
+					this.selectSubscribeId = data.id
+					// uni.showModal({
+					// 	title: '取消预约',
+					// 	content: '确定要取消预约？',
+					// 	showCancel: true,//是否显示取消按钮
+					// 	cancelText:"否",//默认是“取消”
+					// 	cancelColor:'skyblue',//取消文字的颜色
+					// 	confirmText:"是",//默认是“确定”
+					// 	confirmColor: 'skyblue',//确定文字的颜色
+					// 	success: function (res) {
+					// 	    if (res.cancel) {
+					// 	        //点击取消,默认隐藏弹框
+					// 	    } else {
+					// 	        //点击确定，取消预约
+					// 			// subscribeApi.updateSubscribeStatus(data.id, 2, null, null, null).then(resp => {
+					// 			// 	that.refreshSubscribeList()
+					// 			// })
+					// 			that.showCancelReason = true
+					// 	    }
+					// 	},
+					// 	fail: function (res) { },//接口调用失败的回调函数
+					// 	complete: function (res) { },//接口调用结束的回调函数（调用成功、失败都会执行）
+					// })
 				} else if (optionIndex == 2){
 					uni.navigateTo({
 						url:'../user_subscribe_finish/user_subscribe_finish?subscribeId=' + data.id
