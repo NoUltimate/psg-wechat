@@ -1,38 +1,95 @@
 <template>
 	<view>
 		<u-form :model="form" ref="uForm">
-			<u-form-item prop="realName" label="姓名" >
-				<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
+			<uni-group title="基本信息" top="20">
+				<u-form-item prop="realName" label="姓名" >
+					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
 				</u-form-item>
-<!-- 			<u-form-item prop="nickName" label="昵称" >
-				<u-input v-model="form.nickName" placeholder="请选择昵称"/>
-			</u-form-item> -->
-			<u-form-item prop="sex" label="性别" >
-				<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
-			</u-form-item>
-			<u-form-item prop="phone" label="电话">
-				<u-input v-model="form.phone" placeholder="请输入电话"/>
-			</u-form-item>
-			<u-form-item prop="studentId" label="学号">
-				<u-input v-model="form.studentId" placeholder="请输入学号"/>
-			</u-form-item>
-			<u-form-item prop="grade" label="年级" >
-				<u-input :border="border" type="select" :select-open="gradeShow" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"></u-input>
-			</u-form-item>
-			<u-form-item prop="academic" label="学院" >
-				<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="academicShow = true"></u-input>
-			</u-form-item>
-			<u-checkbox-group v-if="promiseShow" @change="checkboxGroupChange">
-				<u-checkbox 
-					@change="checkboxChange" 
-					v-model="item.checked" 
-					v-for="(item, index) in promiseList" :key="index" 
-					:name="item.name"
-				>{{item.name}}</u-checkbox>我已阅读并同意
-			    <text @click='gotoPromise' style='color:red;'>《来访者知情同意书》</text>
-			</u-checkbox-group>
+<!-- 				<u-form-item prop="realName" label="姓名" >
+					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
+				</u-form-item> -->
+				<u-form-item prop="realName" label="是否是浙江大学学生" label-position="top">
+					<u-checkbox-group max="1" @change="checkboxGroupChange">
+						<u-checkbox 
+							@change="checkboxChange" 
+							v-model="item.checked" 
+							v-for="(item, index) in isZjutStudentList" :key="index" 
+							:name="item.name"
+						>{{item.name}}</u-checkbox>
+					</u-checkbox-group>
+				</u-form-item>
+				<u-form-item prop="studentId" label="学号">
+					<u-input v-model="form.studentId" placeholder="请输入学号"/>
+				</u-form-item>
+	<!-- 			<u-form-item prop="nickName" label="昵称" >
+					<u-input v-model="form.nickName" placeholder="请选择昵称"/>
+				</u-form-item> -->
+				<u-form-item prop="sex" label="性别" >
+					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+				</u-form-item>
+				<u-form-item prop="birth" label="出生年月" label-width="120">
+					<u-input v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请输入学号"/>
+					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
+				</u-form-item>
+				<u-form-item prop="age" label="年龄(周岁)" label-width="150" >
+					<u-input :border="border" type="number"  v-model="form.age" placeholder="请填写年龄" ></u-input>
+				</u-form-item>
+				<u-form-item prop="sex" label="性别" >
+					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+					<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
+				</u-form-item>
+				<u-form-item prop="academic" label="学院" >
+					<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="academicShow = true"></u-input>
+				</u-form-item>
+				<u-form-item prop="grade" label="年级" >
+					<u-input :border="border" type="select" :select-open="gradeShow" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"></u-input>
+				</u-form-item>
+				<u-form-item prop="schoolIdentity" label="在校身份" label-width="120">
+					<u-input :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
+				</u-form-item>
+				<u-form-item prop="familyStruct" label="家庭结构" label-width="120">
+					<u-input :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
+					<u-select @confirm="familyStructConfirm" mode="single-column" v-model="familyStructShow" :list="familyStructList" value-name="id" label-name="name" ></u-select>
+				</u-form-item>
+				<u-form-item prop="phone" label="手机号码" label-width="120">
+					<u-input v-model="form.phone" placeholder="请输入电话"/>
+				</u-form-item>
+				<u-form-item prop="email" label="邮箱">
+					<u-input v-model="form.email" placeholder="请输入邮箱"/>
+				</u-form-item>
+				<u-form-item prop="email" label="对于是否愿意付费咨询？ 60元/45分钟" label-position="top">
+					<u-checkbox-group max="1" @change="checkboxGroupChange">
+						<u-checkbox 
+							@change="checkboxChange" 
+							v-model="item.checked" 
+							v-for="(item, index) in isWillingPayList" :key="index" 
+							:name="item.name"
+						>{{item.name}}</u-checkbox>
+					</u-checkbox-group>
+				</u-form-item>
+			</uni-group>
+			<uni-group title="紧急联系人" top="20">
+			    <u-form-item prop="emergencyContact.name" label="姓名">
+			    	<u-input v-model="form.emergencyContact.name" placeholder="请输入联系人名称"/>
+			    </u-form-item>
+				<u-form-item prop="emergencyContact.relationship" label="关系">
+					<u-input type="select" :select-open="relationshipShow" v-model="form.emergencyContact.relationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
+					<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
+				</u-form-item>
+				<u-form-item prop="emergencyContact.phone" label="手机号码" label-width="120">
+					<u-input v-model="form.emergencyContact.phone" placeholder="请输入联系人手机号码"/>
+				</u-form-item>
+				<u-checkbox-group v-if="promiseShow" @change="checkboxGroupChange">
+					<u-checkbox 
+						@change="checkboxChange" 
+						v-model="item.checked" 
+						v-for="(item, index) in promiseList" :key="index" 
+						:name="item.name"
+					>{{item.name}}</u-checkbox>我已阅读并同意
+					<text @click='gotoPromise' style='color:red;'>《来访者知情同意书》</text>
+				</u-checkbox-group>
+			</uni-group>
 			<u-button @click="submit">{{buttonText}}</u-button>
-			<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
 			<u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select>
 			<u-select @confirm="gradeConfirm" mode="single-column" v-model="gradeShow"   :list="gradeList" value-name="id" label-name="name"></u-select>
 		</u-form>
@@ -51,14 +108,49 @@
 				gradeShow: false,
 				academicShow: false,
 				sexShow: false,
+				birthShow: false,
+				familyStructShow: false,
+				relationshipShow: false,
 				gradeList: undefined,
 				academicList: undefined,
 				academicMap: undefined,
 				gradeMap: undefined,
 				buttonText: "更新",
+				params: {
+					year: true,
+					month: true,
+					day: true,
+					hour: false,
+					minute: false,
+					second: false
+				},
 				promiseList: [
 					{
 						name: '',
+						checked: false,
+						disabled: false
+					}
+				],
+				isZjutStudentList: [
+					{
+						name: '是',
+						checked: false,
+						disabled: false
+					},
+					{
+						name: '否',
+						checked: false,
+						disabled: false
+					}
+				],
+				isWillingPayList: [
+					{
+						name: '是',
+						checked: false,
+						disabled: false
+					},
+					{
+						name: '否',
 						checked: false,
 						disabled: false
 					}
@@ -71,6 +163,70 @@
 					{ 
 						id: 2,
 						name: '女'
+					}
+				],
+				familyStructList: [
+					{
+						id: 1,
+						name: '完整'
+					},
+					{ 
+						id: 2,
+						name: '单亲'
+					},
+					{
+						id: 3,
+						name: '重组'
+					},
+					{
+						id: 4,
+						name: '孤儿'
+					},
+					{
+						id: 5,
+						name: '他人抚养'
+					}
+				],
+				relationshipList: [
+					{
+						id: 1,
+						name: '朋友'
+					},
+					{ 
+						id: 2,
+						name: '家人'
+					},
+					{
+						id: 3,
+						name: '亲戚'
+					},
+					{
+						id: 4,
+						name: '同学'
+					},
+					{
+						id: 5,
+						name: '情侣'
+					},
+					,
+					{
+						id: 6,
+						name: '同事'
+					},
+					,
+					{
+						id: 7,
+						name: '导师'
+					},
+					,
+					{
+						id: 8,
+						name: '辅导员 其他'
+					},
+					,
+					{
+						id: 9,
+						name: '其他'
 					}
 				],
 				rules : {
@@ -157,7 +313,12 @@
 					studentId: '',
 					academic: '',
 					sex: '',
-					grade: ''
+					grade: '',
+					emergencyContact: {
+						name: undefined,
+						relationship: undefined,
+						phone: undefined
+					}
 				},
 				switchVal: false
 			};
@@ -219,6 +380,16 @@
 			sexConfirm: function(select) {
 				that.form.sex = select[0].label
 			},
+			birthConfirm: function(select) {
+				console.log(select)
+				that.form.birth = select.year + "-" + select.month + "-" + select.day
+			},
+			familyStructConfirm: function(select) {
+				that.form.familyStruct = select[0].label
+			},
+			relationshipConfirm: function(select) {
+				that.form.emergencyContact.relationship = select[0].label
+			},
 			checkboxChange: function() {
 				
 			},
@@ -229,6 +400,9 @@
 				uni.navigateTo({
 					url: "../promise/promise"
 				})
+			},
+			clickBirth: function() {
+				this.birthShow = true
 			},
 			submit: function() {
 				that.$refs.uForm.validate(valid => {
