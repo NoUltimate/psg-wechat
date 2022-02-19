@@ -8,7 +8,7 @@
 <!-- 				<u-form-item prop="realName" label="姓名" >
 					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
 				</u-form-item> -->
-				<u-form-item prop="realName" label="是否是浙江大学学生" label-position="top">
+				<u-form-item prop="isZjutStudent" label="是否是浙江大学学生" label-position="top">
 					<u-checkbox-group max="1" @change="checkboxGroupChange">
 						<u-checkbox 
 							@change="checkboxChange" 
@@ -57,7 +57,7 @@
 				<u-form-item prop="email" label="邮箱">
 					<u-input v-model="form.email" placeholder="请输入邮箱"/>
 				</u-form-item>
-				<u-form-item prop="email" label="对于是否愿意付费咨询？ 60元/45分钟" label-position="top">
+				<u-form-item prop="isWillingPay" label="对于是否愿意付费咨询？ 60元/45分钟" label-position="top">
 					<u-checkbox-group max="1" @change="checkboxGroupChange">
 						<u-checkbox 
 							@change="checkboxChange" 
@@ -68,6 +68,20 @@
 					</u-checkbox-group>
 				</u-form-item>
 			</uni-group>
+<!-- 			<view v-for="(concat, index) in form.emergencyContact" :key="index">
+				<uni-group title="紧急联系人" top="20">
+				    <u-form-item :prop="'emergencyContact.name'" label="姓名">
+				    	<u-input v-model="concat.name" placeholder="请输入联系人名称"/>
+				    </u-form-item>
+					<u-form-item prop="emergencyContact.relationship" label="关系">
+						<u-input type="select" :select-open="relationshipShow" v-model="concat.relationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
+						<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
+					</u-form-item>
+					<u-form-item prop="emergencyContact.phone" label="手机号码" label-width="120">
+						<u-input v-model="concat.phone" placeholder="请输入联系人手机号码"/>
+					</u-form-item>
+				</uni-group>
+			</view> -->
 			<uni-group title="紧急联系人" top="20">
 			    <u-form-item prop="emergencyContact.name" label="姓名">
 			    	<u-input v-model="form.emergencyContact.name" placeholder="请输入联系人名称"/>
@@ -76,8 +90,8 @@
 					<u-input type="select" :select-open="relationshipShow" v-model="form.emergencyContact.relationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
 					<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
-				<u-form-item prop="emergencyContact.phone" label="手机号码" label-width="120">
-					<u-input v-model="form.emergencyContact.phone" placeholder="请输入联系人手机号码"/>
+				<u-form-item prop="emergencyContactPhone" label="手机号码" label-width="120">
+					<u-input v-model="form.emergencyContactPhone" placeholder="请输入联系人手机号码"/>
 				</u-form-item>
 				<u-checkbox-group v-if="promiseShow" @change="checkboxGroupChange">
 					<u-checkbox 
@@ -113,8 +127,10 @@
 				relationshipShow: false,
 				gradeList: undefined,
 				academicList: undefined,
-				academicMap: undefined,
-				gradeMap: undefined,
+				academicMap: new Map(),
+				familyStructMap: new Map(),
+				relationshipMap: new Map(),
+				gradeMap: new Map(),
 				buttonText: "更新",
 				params: {
 					year: true,
@@ -135,24 +151,28 @@
 					{
 						name: '是',
 						checked: false,
-						disabled: false
+						disabled: false,
+						value: 1
 					},
 					{
 						name: '否',
 						checked: false,
-						disabled: false
+						disabled: false,
+						value: 0
 					}
 				],
 				isWillingPayList: [
 					{
 						name: '是',
 						checked: false,
-						disabled: false
+						disabled: false,
+						value: 1
 					},
 					{
 						name: '否',
 						checked: false,
-						disabled: false
+						disabled: false,
+						value: 0
 					}
 				],
 				sexList: [
@@ -304,6 +324,13 @@
 							message: '请选择年级',
 							trigger: ['blur', 'change']
 						}
+					],
+					emergencyContactName: [
+						{
+							required: true,
+							message: '请输入真实姓名',
+							trigger: ['blur', 'change']
+						}
 					]
 				},
 				form: {
@@ -314,11 +341,7 @@
 					academic: '',
 					sex: '',
 					grade: '',
-					emergencyContact: {
-						name: undefined,
-						relationship: undefined,
-						phone: undefined
-					}
+					emergencyContact: undefined
 				},
 				switchVal: false
 			};
@@ -328,6 +351,15 @@
 		},
 		onLoad() {
 			that = this
+			
+			this.familyStructList.forEach(item => {
+				this.familyStructMap[item.name] = item.id
+			})
+			
+			this.relationshipList.forEach(item => {
+				this.relationshipMap[item.name] = item.id
+			})
+			
 			gradeApi.getGradeList().then(resp => {
 				var gradeList = resp.data
 				var gradeMap = new Map();
@@ -347,7 +379,6 @@
 				that.academicMap = academicMap
 			})
 			//TODO rank
-			console.log(getApp().globalData.isRegister)
 			if (getApp().globalData.isRegister) {
 				console.log(getApp().globalData.id)
 				userApi.getUserInfo().then(resp => {
@@ -358,8 +389,24 @@
 					this.form.studentId = user.student_id
 					this.form.academic = user.academic.name
 					this.form.grade = user.grade.name
+					this.form.age = user.age
 					this.form.sex = getApp().globalData.sexIdMap[user.sex]
-					console.log(resp, this.form)
+					this.isZjutStudentList.forEach(item => {
+						if (item.value == user.is_zjut_student) item.checked = true
+					})
+					this.form.birth = user.birth
+					this.form.schoolIdentity = user.school_identity,
+					this.familyStructList.forEach(item => {
+						console.log(item, user)
+						if (item.id == user.family_struct) this.form.familyStruct = item.name
+					})
+					this.form.email = user.email
+					this.isWillingPayList.forEach(item => {
+						if (item.value == user.is_willing_pay) item.checked = true
+					})
+					if (user.emergency_concat_list.length > 0) {
+						this.form.emergencyContact = user.emergency_concat_list[0]
+					}
 				})
 			} else {
 				this.buttonText = "注册"
@@ -390,11 +437,11 @@
 			relationshipConfirm: function(select) {
 				that.form.emergencyContact.relationship = select[0].label
 			},
-			checkboxChange: function() {
-				
+			checkboxChange: function(e) {
+				console.log(e)
 			},
-			checkboxGroupChange: function() {
-				
+			checkboxGroupChange: function(e) {
+				console.log(e)
 			},
 			gotoPromise: function() {
 				uni.navigateTo({
@@ -410,10 +457,24 @@
 						var sex = getApp().globalData.sexMap[that.form.sex]
 						var academicId = that.academicMap[that.form.academic]
 						var gradeId = that.gradeMap[that.form.grade]
+						var isZjutStudent
+						this.isZjutStudentList.forEach(item => {
+							if (item.checked == true) isZjutStudent = item.value
+						})
+						var isWillingPay
+						this.isWillingPayList.forEach(item => {
+							if (item.checked == true) isWillingPay = item.value
+						})
+						var familyStruct 
+						this.familyStructList.forEach(item => {
+							if (item.name == that.form.familyStruct) familyStruct = item.id
+						})
+						
+						console.log(that.familyStructMap, that.form.familyStruct)
 						if (getApp().globalData.isRegister) {
 							this.$showLoading("更新中")
 							console.log("userApi")
-							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId).then(resp => {
+							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age).then(resp => {
 								this.$hideLoding()
 								uni.showToast({
 									title: '更新成功',
@@ -440,7 +501,7 @@
 							// 	return 
 							// }
 							this.$showLoading("注册中")
-							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, getApp().globalData.userInfo.avatarUrl).then(resp => {
+							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age).then(resp => {
 								uni.redirectTo({
 									url: '../index/index'
 								})

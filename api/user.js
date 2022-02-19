@@ -12,7 +12,7 @@ function getUserInfo() {
   })
 }
 
-function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, academicId) {
+function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, academicId, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age) {
 	var data = {
 		sex: sex,
 		real_name: realName,
@@ -20,7 +20,14 @@ function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, acad
 		phone: phone,
 		student_id: studentId,
 		grade_id: gradeId,
-		academic_id: academicId
+		academic_id: academicId,
+		is_zjut_student: isZjutStudent,
+		birth: birth, 
+		school_identity: schoolIdentity, 
+		family_struct: familyStruct, 
+		email: email, 
+		is_willing_pay: isWillingPay,
+		age: age
 	}
 	console.log(data)
 	return request({
@@ -30,7 +37,7 @@ function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, acad
 	})
 }
 
-function register(realName, nickName, sex, phone ,studentId, gradeId, academicId, avatarUrl) {
+function register(realName, nickName, sex, phone ,studentId, gradeId, academicId, avatarUrl, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age) {
   var data = {
     real_name : realName,
 	nick_name : nickName,
@@ -40,7 +47,14 @@ function register(realName, nickName, sex, phone ,studentId, gradeId, academicId
 	grade_id : gradeId,
 	academic_id : academicId,
 	openid : getApp().globalData.openid,
-	avatar_url: avatarUrl
+	avatar_url: avatarUrl,
+	is_zjut_student: isZjutStudent,
+	birth: birth, 
+	school_identity: schoolIdentity, 
+	family_struct: familyStruct, 
+	email: email, 
+	is_willing_pay: isWillingPay,
+	age: age
   }
   return request({
     url: '/user/register',
