@@ -37,18 +37,43 @@
 			</view>
 			<u-button @click="submit">提交</u-button>
 		</u-form> -->
+		
+		
 		<uni-forms ref="form" :modelValue="formData" label-position="top" validate-trigger="bind" label-width="250" :rules="rules">
-			<uni-forms-item name="periods" label="预约时间段（最多5个）" >
+			<uni-group title="预约时间(最多五个)" top="20">
+				<view v-for="(period, index1) in periods" :key="index1">
+					<uni-forms-item :name="'periods[' + index1 + '].data'" :label="'预约时间' + (index1 + 1)" label-position="top" :rules="periodRule" validate-trigger="bind">
+						<view>
+							<uni-data-picker readonly="true" v-model="periods[index1].data" :localdata="selectPeriods" popup-title="请选择预约时间" @change="periodChange" @nodeclick="onnodeclick"></uni-data-picker>
+						</view>
+					</uni-forms-item>
+				</view>
+			</uni-group>
+			<uni-group title="问卷调查" top="20">
+				<view v-for="(question, index1) in showQuestionList" :key="index1">
+					<uni-forms-item :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" label-position="top" validate-trigger="bind">
+						<view v-if="isVisible(question)">
+							<view v-if="question.type == 1">
+								<uni-data-checkbox v-model="showQuestionList[index1].value" :localdata="question.config_object.options"  @change="questionOptionChange"></uni-data-checkbox>
+							</view>
+							<view v-if="question.type == 2">
+								<uni-easyinput type="textarea" disabled="true" autoHeight v-model="showQuestionList[index1].value" placeholder="请输入内容"></uni-easyinput>
+							</view>
+						</view>
+					</uni-forms-item>
+				</view>
+			</uni-group>
+	<!-- 		<uni-forms-item name="periods" label="预约时间段（最多5个）" >
 				<uni-collapse ref="collapse">
 					<uni-collapse-item :open="true">
 						<template v-slot:title>
 							
 						</template>
 						<view>
-<!-- 							<view class="uni-flex uni-row">
+							<view class="uni-flex uni-row">
 								<uni-icons type="plus" size="20" @click="addPeriod" ></uni-icons>
 								<uni-icons type="minus" size="20" @click="deletePeriod"></uni-icons>
-							</view> -->
+							</view>
 							<view>
 								<view v-for="(period, index1) in periods" :key="index1">
 									<view>
@@ -71,7 +96,7 @@
 						</view>
 					</view>
 				</uni-forms-item>
-			</view>
+			</view> -->
 		</uni-forms>
 	</view>
 </template>
@@ -154,9 +179,9 @@
 						]
 					})
 				}
-				this.$nextTick(() => {
-				    this.$refs.collapse.resize()
-				})
+				// this.$nextTick(() => {
+				//     this.$refs.collapse.resize()
+				// })
 				var showQuestionList = subscribeData.detail.question_detail_object
 				showQuestionList.forEach(question => {
 					if (question.type == 1) {
@@ -216,7 +241,7 @@
 				this.$nextTick(() => {
 			        this.$refs.collapse.resize()
 			    })
-				console.log(this.formData.periods)
+				//console.log(this.formData.periods)
 			},
 			submit: function(ref) {
 				this.$refs.form.validate([],(err,value)=>{

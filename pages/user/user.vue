@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-top-tips ref="uTips"></u-top-tips>
-		<u-action-sheet :list="cancelReasonList" @click="clickCancelReason" v-model="showCancelReason"></u-action-sheet>
+<!-- 		<u-action-sheet :list="cancelReasonList" @click="clickCancelReason" v-model="showCancelReason"></u-action-sheet> -->
 		<view class="userinfo">
 			<view class="userinfo-avatar">
 				<image src="../../static/img/user/xinli.png" mode="cover"></image>
@@ -19,7 +19,7 @@
 					</u-col>
 				</u-row>
 			</view>
-			<view v-if="role==2 && hasSubscribe==false" style="margin-top: 50rpx;">
+			<view v-if="role!=1 && hasSubscribe==false" style="margin-top: 50rpx;">
 					<u-col offset="4" span="6">
 						<text style="text-decoration:underline;font-size: medium;width: 380rpx;" @click="gotoSubscribeNotice">用户预约须知</text>
 					</u-col>
@@ -167,7 +167,7 @@
 			var reasonList = []
 			if (this.role == 1) {
 				reasonList = ['预约用户没有按时到场', '预约用户没有按时点击完成预约', '预约用户不是本校学生', '时间冲突', '其他理由']
-			} else {
+			} else if(this.role == 2){
 				reasonList = ['预约时间选错了', '预约时间已经过了', '时间冲突', '其他理由']
 			}
 			reasonList.forEach(reason => {
@@ -324,6 +324,7 @@
 					that.refreshSubscribeList()
 				})
 				this.reason = ""
+				this.customReason = ""
 			},
 			click: function(index, optionIndex) {
 				console.log(this.subscribeList, index)

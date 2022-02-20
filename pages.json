@@ -18,7 +18,11 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
-                "enablePullDownRefresh": true
+                "enablePullDownRefresh": true,
+				"app-plus": {
+					"bounce": "none"
+				}
+				
             }
             
         }
@@ -108,7 +112,10 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"bounce": "none"
+				}
             }
             
         }

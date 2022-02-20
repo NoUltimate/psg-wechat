@@ -27,8 +27,8 @@
 				<u-form-item prop="sex" label="性别" >
 					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
 				</u-form-item>
-				<u-form-item prop="birth" label="出生年月" label-width="120">
-					<u-input v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请输入学号"/>
+				<u-form-item prop="birth" label="出生年月" label-width="150">
+					<u-input v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请选择出生年月"/>
 					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
 				</u-form-item>
 				<u-form-item prop="age" label="年龄(周岁)" label-width="150" >
@@ -44,14 +44,14 @@
 				<u-form-item prop="grade" label="年级" >
 					<u-input :border="border" type="select" :select-open="gradeShow" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"></u-input>
 				</u-form-item>
-				<u-form-item prop="schoolIdentity" label="在校身份" label-width="120">
+				<u-form-item prop="schoolIdentity" label="在校身份" label-width="150">
 					<u-input :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
 				</u-form-item>
-				<u-form-item prop="familyStruct" label="家庭结构" label-width="120">
+				<u-form-item prop="familyStruct" label="家庭结构" label-width="150">
 					<u-input :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
 					<u-select @confirm="familyStructConfirm" mode="single-column" v-model="familyStructShow" :list="familyStructList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
-				<u-form-item prop="phone" label="手机号码" label-width="120">
+				<u-form-item prop="phone" label="手机号码" label-width="150">
 					<u-input v-model="form.phone" placeholder="请输入电话"/>
 				</u-form-item>
 				<u-form-item prop="email" label="邮箱">
@@ -90,7 +90,7 @@
 					<u-input type="select" :select-open="relationshipShow" v-model="form.emergencyContactRelationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
 					<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
-				<u-form-item prop="emergencyContactPhone" label="手机号码" label-width="120">
+				<u-form-item prop="emergencyContactPhone" label="手机号码" label-width="150">
 					<u-input v-model="form.emergencyContactPhone" placeholder="请输入联系人手机号码"/>
 				</u-form-item>
 				<u-checkbox-group v-if="promiseShow" @change="checkboxGroupChange">
@@ -588,7 +588,6 @@
 							phone: that.form.emergencyContactPhone
 						}]
 						
-						console.log(that.familyStructMap, that.form.familyStruct)
 						if (getApp().globalData.isRegister) {
 							this.$showLoading("更新中")
 							console.log("userApi")
