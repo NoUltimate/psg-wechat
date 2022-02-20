@@ -9,9 +9,9 @@
 					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
 				</u-form-item> -->
 				<u-form-item prop="isZjutStudent" label="是否是浙江大学学生" label-position="top">
-					<u-checkbox-group max="1" @change="checkboxGroupChange">
+					<u-checkbox-group max="1" @change="isZjutStudentCheckboxGroupChange">
 						<u-checkbox 
-							@change="checkboxChange" 
+							@change="isZjutStudentCheckboxChange" 
 							v-model="item.checked" 
 							v-for="(item, index) in isZjutStudentList" :key="index" 
 							:name="item.name"
@@ -32,7 +32,7 @@
 					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
 				</u-form-item>
 				<u-form-item prop="age" label="年龄(周岁)" label-width="150" >
-					<u-input :border="border" type="number"  v-model="form.age" placeholder="请填写年龄" ></u-input>
+					<u-input :border="border"  v-model="form.age" placeholder="请填写年龄" ></u-input>
 				</u-form-item>
 				<u-form-item prop="sex" label="性别" >
 					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
@@ -83,11 +83,11 @@
 				</uni-group>
 			</view> -->
 			<uni-group title="紧急联系人" top="20">
-			    <u-form-item prop="emergencyContact.name" label="姓名">
-			    	<u-input v-model="form.emergencyContact.name" placeholder="请输入联系人名称"/>
+			    <u-form-item prop="emergencyContactName" label="姓名">
+			    	<u-input v-model="form.emergencyContactName" placeholder="请输入联系人名称"/>
 			    </u-form-item>
-				<u-form-item prop="emergencyContact.relationship" label="关系">
-					<u-input type="select" :select-open="relationshipShow" v-model="form.emergencyContact.relationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
+				<u-form-item prop="emergencyContactRelationship" label="关系">
+					<u-input type="select" :select-open="relationshipShow" v-model="form.emergencyContactRelationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
 					<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="emergencyContactPhone" label="手机号码" label-width="120">
@@ -279,18 +279,90 @@
 							trigger: ['blur', 'change']
 						}
 					],
+					age: [
+						{
+							validator: (rule, value, callback) => {
+								return true;
+							},
+							message: '手机格式不正确',
+							trigger: ['blur', 'change']
+						}
+					],
+					birth: [
+						{
+							required: true,
+							message: '请选择出生年月',
+							trigger: ['blur', 'change']
+						}
+					],
+					isZjutStudent: [
+						{
+							validator: (rule, value, callback) => {
+								var flag = false
+								that.isZjutStudentList.forEach(item => {
+									if (item.checked == true) flag = true;
+								})
+								return flag;
+							},
+							message: '请选择是/否',
+							trigger: ['blur', 'change']
+						}
+					],
+					schoolIdentity: [
+						{
+							required: true,
+							message: '请输入在校身份',
+							trigger: ['blur', 'change']
+						}
+					],
+					familyStruct: [
+						{
+							required: true,
+							message: '请选择家庭结构',
+							trigger: ['blur', 'change']
+						}
+					],
+					email: [
+						{
+							required: true,
+							message: '请输入邮箱',
+							trigger: ['blur', 'change']
+						},
+						{
+							validator: (rule, value, callback) => {
+								var p = /^[A-Za-z0-9-._]+@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,6})$/
+								return p.test(String(that.form.email));
+							},
+							message: '邮箱格式不正确',
+							trigger: ['blur', 'change']
+						}
+					],
+					isWillingPay: [
+						{
+							validator: (rule, value, callback) => {
+								var flag = false
+								that.isWillingPayList.forEach(item => {
+									if (item.checked == true) flag = true;
+								})
+								return flag;
+							},
+							message: '请选择是/否',
+							trigger: ['blur', 'change']
+						}
+					],
+					
 					phone: [
 						{
 							required: true,
 							message: '请输入电话',
-							trigger: ['blur']
+							trigger: ['blur', 'change']
 						},
 						{
 							validator: (rule, value, callback) => {
 								return this.$u.test.mobile(value);
 							},
-							message: '手机格式不正确',
-							trigger: ['blur']
+							message: '电话格式不正确',
+							trigger: ['blur', 'change']
 						}
 					],
 					studentId: [
@@ -328,7 +400,28 @@
 					emergencyContactName: [
 						{
 							required: true,
-							message: '请输入真实姓名',
+							message: '请输入联系人姓名',
+							trigger: ['blur', 'change']
+						}
+					],
+					emergencyContactRelationship: [
+						{
+							required: true,
+							message: '请选择联系人和您的关系',
+							trigger: ['blur', 'change']
+						}
+					],
+					emergencyContactPhone: [
+						{
+							required: true,
+							message: '请输入联系人电话',
+							trigger: ['blur', 'change']
+						},
+						{
+							validator: (rule, value, callback) => {
+								return this.$u.test.mobile(value);
+							},
+							message: '手机格式不正确',
 							trigger: ['blur', 'change']
 						}
 					]
@@ -380,7 +473,6 @@
 			})
 			//TODO rank
 			if (getApp().globalData.isRegister) {
-				console.log(getApp().globalData.id)
 				userApi.getUserInfo().then(resp => {
 					var user = resp.data
 					this.form.realName = user.real_name
@@ -397,7 +489,6 @@
 					this.form.birth = user.birth
 					this.form.schoolIdentity = user.school_identity,
 					this.familyStructList.forEach(item => {
-						console.log(item, user)
 						if (item.id == user.family_struct) this.form.familyStruct = item.name
 					})
 					this.form.email = user.email
@@ -405,7 +496,12 @@
 						if (item.value == user.is_willing_pay) item.checked = true
 					})
 					if (user.emergency_concat_list.length > 0) {
-						this.form.emergencyContact = user.emergency_concat_list[0]
+						this.form.emergencyContactName = user.emergency_concat_list[0].name
+						this.form.emergencyContactPhone = user.emergency_concat_list[0].phone
+						this.relationshipList.forEach(item => {
+							if (item.id == user.emergency_concat_list[0].relationship) this.form.emergencyContactRelationship = item.name
+						})
+						
 					}
 				})
 			} else {
@@ -435,13 +531,22 @@
 				that.form.familyStruct = select[0].label
 			},
 			relationshipConfirm: function(select) {
-				that.form.emergencyContact.relationship = select[0].label
-			},
+				that.form.emergencyContactRelationship = select[0].label
+			},							
 			checkboxChange: function(e) {
 				console.log(e)
 			},
 			checkboxGroupChange: function(e) {
 				console.log(e)
+			},
+			isZjutStudentCheckboxGroupChange: function(e) {
+				console.log(e)
+			},
+			isZjutStudentCheckboxChange: function(e) {
+				console.log(e)
+				this.isZjutStudentList.forEach(item => {
+					if (item.name == e[0]) this.form.isZjutStudent = item.id
+				})
 			},
 			gotoPromise: function() {
 				uni.navigateTo({
@@ -470,11 +575,24 @@
 							if (item.name == that.form.familyStruct) familyStruct = item.id
 						})
 						
+						var relationship
+						this.relationshipList.forEach(item => {
+							if (item.name == that.form.emergencyContactRelationship) relationship = item.id
+						})
+						
+						var emergencyConcatList = [{
+							id: that.form.emergencyConcatId,
+							user_id: getApp().globalData.id,
+							name: that.form.emergencyContactName,
+							relationship: relationship,
+							phone: that.form.emergencyContactPhone
+						}]
+						
 						console.log(that.familyStructMap, that.form.familyStruct)
 						if (getApp().globalData.isRegister) {
 							this.$showLoading("更新中")
 							console.log("userApi")
-							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age).then(resp => {
+							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
 								this.$hideLoding()
 								uni.showToast({
 									title: '更新成功',
@@ -501,7 +619,7 @@
 							// 	return 
 							// }
 							this.$showLoading("注册中")
-							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age).then(resp => {
+							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
 								uni.redirectTo({
 									url: '../index/index'
 								})

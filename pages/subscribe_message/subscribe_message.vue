@@ -37,8 +37,20 @@
 			</view>
 			<u-button @click="submit">提交</u-button>
 		</u-form> -->
-		<uni-forms ref="form" :modelValue="formData" label-position="top" validate-trigger="bind" label-width="250" :rules="rules">
-			<uni-forms-item name="periods" label="预约时间段（最多5个）" >
+		
+		<uni-forms ref="form" :modelValue="formData" label-width="250" :rules="rules">
+			<uni-group title="预约时间(最多五个)" top="20">
+				<uni-icons type="plus" size="20" @click="addPeriod" ></uni-icons>
+				<uni-icons type="minus" size="20" @click="deletePeriod"></uni-icons>
+				<view v-for="(period, index1) in periods" :key="index1">
+					<uni-forms-item :name="'periods[' + index1 + '].data'" :label="'预约时间' + (index1 + 1)" label-position="top" :rules="periodRule" validate-trigger="bind">
+						<view>
+							<uni-data-picker v-model="periods[index1].data" :localdata="selectPeriods" popup-title="请选择预约时间" @change="periodChange" @nodeclick="onnodeclick"></uni-data-picker>
+						</view>
+					</uni-forms-item>
+				</view>
+			</uni-group>
+<!-- 			<uni-forms-item name="periods" label="预约时间段（最多5个）" >
 				<uni-collapse ref="collapse">
 					<uni-collapse-item :open="true">
 						<template v-slot:title>
@@ -59,19 +71,21 @@
 						</view>
 					</uni-collapse-item>
 				</uni-collapse>
-			</uni-forms-item>
-			<view v-for="(question, index1) in showQuestionList" :key="index1">
-				<uni-forms-item :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" >
-					<view v-if="isVisible(question)">
-						<view v-if="question.type == 1">
-							<uni-data-checkbox v-model="showQuestionList[index1].value" :localdata="question.config_object.options"  @change="questionOptionChange"></uni-data-checkbox>
+			</uni-forms-item> -->
+			<uni-group title="问卷调查" top="20">
+				<view v-for="(question, index1) in showQuestionList" :key="index1">
+					<uni-forms-item :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" label-position="top" validate-trigger="bind">
+						<view v-if="isVisible(question)">
+							<view v-if="question.type == 1">
+								<uni-data-checkbox v-model="showQuestionList[index1].value" :localdata="question.config_object.options"  @change="questionOptionChange"></uni-data-checkbox>
+							</view>
+							<view v-if="question.type == 2">
+								<uni-easyinput type="textarea" autoHeight v-model="showQuestionList[index1].value" placeholder="请输入内容"></uni-easyinput>
+							</view>
 						</view>
-						<view v-if="question.type == 2">
-							<uni-easyinput type="textarea" autoHeight v-model="showQuestionList[index1].value" placeholder="请输入内容"></uni-easyinput>
-						</view>
-					</view>
-				</uni-forms-item>
-			</view>
+					</uni-forms-item>
+				</view>
+			</uni-group>
 			<u-button @click="submit(form)">提交</u-button>
 		</uni-forms>
 	</view>
@@ -85,9 +99,10 @@
 	export default {
 		data() {
 			return {
+				periodRule: [{required: true, errorMessage: "预约时间不能为空"}],
 				questionRule: [{required: true, errorMessage: "该内容不能为空"}],
 				rules: {
-				    periods: {
+				    email: {
 						rules: [
 							{
 								required: true,
@@ -114,6 +129,7 @@
 					}
 				},
 				selectPeriods: [],
+				originSelectPeriods: [],
 				questionList: [],
 				questionMap: new Map(),
 				showQuestionList: [],
@@ -172,6 +188,7 @@
 					]
 				})
 			}
+			this.originSelectPeriods = this.selectPeriods
 			questionApi.getQuestionList().then(resp => {
 				var questionList = resp.data.question_list
 				//that.questionList = questionList
@@ -210,9 +227,13 @@
 				this.showQuestionList = questionList
 			},
 			periodChange(e) {
-
+				//console.log(e)
+				//that.refreshSelectPeriod(e.detail.value[1].value)
 			},
 			onnodeclick(node) {
+				//console.log(node)
+			},
+			refreshSelectPeriod(value) {
 
 			},
 			getQuestionLabel(index, question) {
@@ -222,21 +243,55 @@
 				return true;
 			},
 			addPeriod() {
+				if (this.periods.length == 5) {
+					uni.showToast({
+						title: "最多只能选五个",
+						icon: "none"
+					})
+					return
+				}
 				this.periods.push({
+					
 				});
-				this.$nextTick(() => {
-			        this.$refs.collapse.resize()
-			    })
+				// this.$nextTick(() => {
+			 //        this.$refs.collapse.resize()
+			 //    })
 			},
 			deletePeriod() {
+				if (this.periods.length == 1) {
+					uni.showToast({
+						title: "不能再少啦",
+						icon: "none"
+					})
+					return
+				}
 				this.periods.splice(this.periods.length - 1, 1);
-				this.$nextTick(() => {
-			        this.$refs.collapse.resize()
-			    })
+				// this.$nextTick(() => {
+			 //        this.$refs.collapse.resize()
+			 //    })
 			},
 			submit: function(ref) {
-				// this.$refs.form.validate([],(err,value)=>{
-				// 	if (!err) {
+				
+				this.$refs.form.validate([],(err,value)=>{
+					if (this.periods.length == 0) {
+						uni.showToast({
+							title: "预约时间太少啦",
+							icon: "error"
+						})
+						return
+					}
+					for(var i = 0; i < this.periods.length; ++i) {
+						for(var j = i + 1; j < this.periods.length; ++j) {
+							if (this.periods[i].data == this.periods[j].data) {
+								uni.showToast({
+									title: "预约时间重复",
+									icon: "error"
+								})
+								return
+							}
+						}
+					}
+					if (!err) {
 						uni.showModal({
 							title: '预约单',
 							content: '是否确认预约？',
@@ -266,8 +321,8 @@
 							fail: function (res) { },//接口调用失败的回调函数
 							complete: function (res) { },//接口调用结束的回调函数（调用成功、失败都会执行）
 						})
-				// 	}
-				// })
+					}
+				})
 			
 			}
 		}

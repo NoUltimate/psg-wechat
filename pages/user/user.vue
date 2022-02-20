@@ -60,7 +60,7 @@
 										</u-col>
 									</u-row>
 								</view>
-								<view v-if="role == 2">
+								<view v-if="role == 1">
 									<u-row>
 										<u-col span="9">
 											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.user.real_name }}</text><p></p>
@@ -73,7 +73,7 @@
 										</u-col>
 									</u-row>
 								</view>	
-								<view v-if="role == 1">
+								<view v-if="role == 2">
 									<u-row>
 										<u-col span="9">
 											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.user.real_name }}</text><p></p>
@@ -107,6 +107,7 @@
 <script>
 	var that
 	import subscribeApi from '@/api/subscribe.js'
+	import userApi from '@/api/user.js'
 	export default {
 		data() {
 			return {
@@ -256,9 +257,34 @@
 						complete: function (res) { },//接口调用结束的回调函数（调用成功、失败都会执行）
 					})
 				} else {
-					uni.navigateTo({
-						url: "/pages/subscribe_message/subscribe_message"
+					userApi.getUserInfo().then(resp => {
+						console.log(resp.data.is_info_complete, resp.data.is_info_complete == 0)
+						if (resp.data.is_info_complete == 0) {
+							uni.showModal({
+								title: '提示',
+								content: '请先完善个人信息',
+								showCancel: true,//是否显示取消按钮
+								cancelText:"否",//默认是“取消”
+								cancelColor:'skyblue',//取消文字的颜色
+								confirmText:"是",//默认是“确定”
+								confirmColor: 'skyblue',//确定文字的颜色
+								success: function (res) {
+								    if (res.cancel) {
+								        //点击取消,默认隐藏弹框
+								    } else {
+								        //点击确定，取消预约
+								    }
+								},
+								fail: function (res) { },//接口调用失败的回调函数
+								complete: function (res) { },//接口调用结束的回调函数（调用成功、失败都会执行）
+							})
+						} else {
+							uni.navigateTo({
+								url: "/pages/subscribe_message/subscribe_message"
+							})
+						}
 					})
+				
 				}
 			},
 			open: function(index) {
@@ -271,15 +297,33 @@
 				
 			},
 			confirmCancelReason: function(index) {
-				console.log(this.reason, this.customReason)
+				if (this.reason == "") {
+					uni.showToast({
+						title: '请选择取消理由',
+						icon: 'none'
+					});
+					this.show = true
+					return;
+				}
 				var reason = this.reason
-				if (reason == '其他理由') reason = this.customReason
-				subscribeApi.updateSubscribeStatus(this.selectSubscribeId, null, null, null, reason).then(resp => {
+				if (reason == '其他理由') {
+					if (this.customReason == "") {
+						uni.showToast({
+							title: '请填写取消理由',
+							icon: 'none'
+						});
+						this.show = true
+						return;
+					}
+					reason = this.customReason
+				}
+				subscribeApi.updateSubscribeStatus(this.selectSubscribeId, 2, null, null, reason).then(resp => {
 					uni.navigateBack({
 						
 					})
 					that.refreshSubscribeList()
 				})
+				this.reason = ""
 			},
 			click: function(index, optionIndex) {
 				console.log(this.subscribeList, index)

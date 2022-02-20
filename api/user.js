@@ -12,7 +12,7 @@ function getUserInfo() {
   })
 }
 
-function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, academicId, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age) {
+function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, academicId, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
 	var data = {
 		sex: sex,
 		real_name: realName,
@@ -27,7 +27,8 @@ function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, acad
 		family_struct: familyStruct, 
 		email: email, 
 		is_willing_pay: isWillingPay,
-		age: age
+		age: age,
+		emergency_concat_list: emergencyConcatList
 	}
 	console.log(data)
 	return request({
@@ -37,7 +38,7 @@ function updateUserInfo(realName, nickName, sex, phone ,studentId, gradeId, acad
 	})
 }
 
-function register(realName, nickName, sex, phone ,studentId, gradeId, academicId, avatarUrl, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age) {
+function register(realName, nickName, sex, phone ,studentId, gradeId, academicId, avatarUrl, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
   var data = {
     real_name : realName,
 	nick_name : nickName,
@@ -54,7 +55,8 @@ function register(realName, nickName, sex, phone ,studentId, gradeId, academicId
 	family_struct: familyStruct, 
 	email: email, 
 	is_willing_pay: isWillingPay,
-	age: age
+	age: age,
+	emergency_concat_list: emergencyConcatList
   }
   return request({
     url: '/user/register',
