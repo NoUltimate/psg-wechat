@@ -3,13 +3,13 @@
 		<u-form :model="form" ref="uForm">
 			<uni-group title="基本信息" top="20">
 				<u-form-item prop="realName" label="姓名" >
-					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
+					<u-input disabled="true" v-model="form.realName" placeholder="请输入真实姓名"/>
 				</u-form-item>
 <!-- 				<u-form-item prop="realName" label="姓名" >
-					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
+					<u-input disabled="true" v-model="form.realName" placeholder="请输入真实姓名"/>
 				</u-form-item> -->
 				<u-form-item prop="isZjutStudent" label="是否是浙江大学学生" label-position="top">
-					<u-checkbox-group @change="isZjutStudentCheckboxGroupChange">
+					<u-checkbox-group disabled="true" max="1" @change="isZjutStudentCheckboxGroupChange">
 						<u-checkbox 
 							@change="isZjutStudentCheckboxChange" 
 							v-model="item.checked" 
@@ -19,47 +19,46 @@
 					</u-checkbox-group>
 				</u-form-item>
 				<u-form-item prop="studentId" label="学号">
-					<u-input v-model="form.studentId" placeholder="请输入学号"/>
+					<u-input disabled="true" v-model="form.studentId" placeholder="请输入学号"/>
 				</u-form-item>
 	<!-- 			<u-form-item prop="nickName" label="昵称" >
-					<u-input v-model="form.nickName" placeholder="请选择昵称"/>
+					<u-input disabled="true" v-model="form.nickName" placeholder="请选择昵称"/>
 				</u-form-item> -->
 				<u-form-item prop="sex" label="性别" >
-					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
 				</u-form-item>
 				<u-form-item prop="birth" label="出生年月" label-width="150">
-					<u-input v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请选择出生年月"/>
+					<u-input disabled="true" v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请选择出生年月"/>
 					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
 				</u-form-item>
 				<u-form-item prop="age" label="年龄(周岁)" label-width="150" >
-					<u-input :border="border"  v-model="form.age" placeholder="请填写年龄" ></u-input>
+					<u-input disabled="true" :border="border"  v-model="form.age" placeholder="请填写年龄" ></u-input>
 				</u-form-item>
 				<u-form-item prop="sex" label="性别" >
-					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
 					<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="academic" label="学院" >
-					<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="academicShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="academicShow = true"></u-input>
 				</u-form-item>
 				<u-form-item prop="grade" label="年级" >
-					<u-input :border="border" v-model="form.grade" placeholder="请选择年级 例如本科一"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="gradeShow" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"></u-input>
 				</u-form-item>
 				<u-form-item prop="schoolIdentity" label="在校身份" label-width="150">
-					<u-input :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
+					<u-input disabled="true" :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
 				</u-form-item>
 				<u-form-item prop="familyStruct" label="家庭结构" label-width="150">
-					<u-input :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
 					<u-select @confirm="familyStructConfirm" mode="single-column" v-model="familyStructShow" :list="familyStructList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="phone" label="手机号码" label-width="150">
-					<u-input v-model="form.phone" placeholder="请输入电话"/>
+					<u-input disabled="true" v-model="form.phone" placeholder="请输入电话" @click="clickPhone()"/>
 				</u-form-item>
 				<u-form-item prop="email" label="邮箱">
-					<u-input v-model="form.email" placeholder="请输入邮箱"/>
+					<u-input disabled="true" v-model="form.email" placeholder="请输入邮箱"/>
 				</u-form-item>
-				<u-form-item prop="isWillingPay" label="是否愿意付费咨询？ 60元/45分钟" label-position="top">
-					(如果是非浙江大学学生，我们将收取费用；如果是浙大学生，愿意付费的等待咨询排序靠前，愿意付费≠预约之后的正式咨询直接需要付费)
-					<u-checkbox-group  @change="checkboxGroupChange">
+				<u-form-item prop="isWillingPay" label="对于是否愿意付费咨询？ 60元/45分钟" label-position="top">
+					<u-checkbox-group disabled="true" max="1" @change="checkboxGroupChange">
 						<u-checkbox 
 							@change="checkboxChange" 
 							v-model="item.checked" 
@@ -72,30 +71,31 @@
 <!-- 			<view v-for="(concat, index) in form.emergencyContact" :key="index">
 				<uni-group title="紧急联系人" top="20">
 				    <u-form-item :prop="'emergencyContact.name'" label="姓名">
-				    	<u-input v-model="concat.name" placeholder="请输入联系人名称"/>
+				    	<u-input disabled="true" v-model="concat.name" placeholder="请输入联系人名称"/>
 				    </u-form-item>
 					<u-form-item prop="emergencyContact.relationship" label="关系">
-						<u-input type="select" :select-open="relationshipShow" v-model="concat.relationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
+						<u-input disabled="true" type="select" :select-open="relationshipShow" v-model="concat.relationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
 						<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
 					</u-form-item>
 					<u-form-item prop="emergencyContact.phone" label="手机号码" label-width="120">
-						<u-input v-model="concat.phone" placeholder="请输入联系人手机号码"/>
+						<u-input disabled="true" v-model="concat.phone" placeholder="请输入联系人手机号码"/>
 					</u-form-item>
 				</uni-group>
 			</view> -->
 			<uni-group title="紧急联系人" top="20">
 			    <u-form-item prop="emergencyContactName" label="姓名">
-			    	<u-input v-model="form.emergencyContactName" placeholder="请输入联系人名称"/>
+			    	<u-input disabled="true" v-model="form.emergencyContactName" placeholder="请输入联系人名称"/>
 			    </u-form-item>
 				<u-form-item prop="emergencyContactRelationship" label="关系">
-					<u-input type="select" :select-open="relationshipShow" v-model="form.emergencyContactRelationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
+					<u-input disabled="true" type="select" :select-open="relationshipShow" v-model="form.emergencyContactRelationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
 					<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="emergencyContactPhone" label="手机号码" label-width="150">
-					<u-input v-model="form.emergencyContactPhone" placeholder="请输入联系人手机号码"/>
+					<u-input disabled="true" v-model="form.emergencyContactPhone" placeholder="请输入联系人手机号码" @click="clickEmergencyConcatPhone"/>
 				</u-form-item>
 				<u-checkbox-group v-if="promiseShow" @change="checkboxGroupChange">
-					<u-checkbox 
+					<u-checkbox v-for="(item,index) in Data"
+						disabled="true"
 						@change="checkboxChange" 
 						v-model="item.checked" 
 						v-for="(item, index) in promiseList" :key="index" 
@@ -104,18 +104,9 @@
 					<text @click='gotoPromise' style='color:red;'>《来访者知情同意书》</text>
 				</u-checkbox-group>
 			</uni-group>
-			<u-button @click="submit">{{buttonText}}</u-button>
-			<!-- <u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select> -->
+			<!-- <u-button @click="submit">{{buttonText}}</u-button> -->
+			<u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select>
 			<u-select @confirm="gradeConfirm" mode="single-column" v-model="gradeShow"   :list="gradeList" value-name="id" label-name="name"></u-select>
-			<u-modal v-model="academicShow" :show-cancel-button="true" confirm-text="确认"
-				title="请选择学院" @cancel="cancel" @confirm="confirmAcademic">
-				<view style="margin-top: auto;">
-					<uni-data-picker v-model="form.academic" :localdata="selectAcademics" popup-title="请选择学院" @change="change" @nodeclick="onnodeclick"></uni-data-picker>
-				</view>
-				<view v-if="form.academic == '其他'">
-					<uni-easyinput type="textarea" autoHeight v-model="customAcademic" placeholder="请输入你的学院"></uni-easyinput>
-				</view>
-			</u-modal>
 		</u-form>
 	</view>
 </template>
@@ -141,9 +132,7 @@
 				familyStructMap: new Map(),
 				relationshipMap: new Map(),
 				gradeMap: new Map(),
-				customAcademic: "",
 				buttonText: "更新",
-				selectAcademics: [],
 				params: {
 					year: true,
 					month: true,
@@ -450,7 +439,7 @@
 		onReady() {
 			this.$refs.uForm.setRules(that.rules);
 		},
-		onLoad() {
+		onLoad(e) {
 			that = this
 			
 			this.familyStructList.forEach(item => {
@@ -461,36 +450,27 @@
 				this.relationshipMap[item.name] = item.id
 			})
 			
-			// gradeApi.getGradeList().then(resp => {
-			// 	var gradeList = resp.data
-			// 	var gradeMap = new Map();
-			// 	that.gradeList = gradeList
-			// 	gradeList.forEach(item => {
-			// 		gradeMap[item.name] = item.id
-			// 	})
-			// 	that.gradeMap = gradeMap
-			// })
+			gradeApi.getGradeList().then(resp => {
+				var gradeList = resp.data
+				var gradeMap = new Map();
+				that.gradeList = gradeList
+				gradeList.forEach(item => {
+					gradeMap[item.name] = item.id
+				})
+				that.gradeMap = gradeMap
+			})
 			academicApi.getAcademicList().then(resp => {
 				var academicList = resp.data
-				var academicMap = new Map()
+				var academicMap = new Map();
 				that.academicList = academicList
 				academicList.forEach(item => {
-					this.selectAcademics.push({
-						text: item.name,
-						value: item.name,
-						children: []
-					})
+					academicMap[item.name] = item.id
 				})
-				this.selectAcademics.push({
-					text: '其他',
-					value: '其他',
-					children: []
-				})
-				
+				that.academicMap = academicMap
 			})
 			//TODO rank
-			if (getApp().globalData.isRegister) {
-				userApi.getUserInfo().then(resp => {
+			if (true) {
+				userApi.getUserInfo(e.userId).then(resp => {
 					var user = resp.data
 					this.form.realName = user.real_name
 					this.form.phone = user.phone
@@ -530,6 +510,26 @@
 			}
 		},
 		methods: {
+			clickEmergencyConcatPhone: function() {
+				uni.setClipboardData({
+					data: this.form.emergencyContactPhone,
+					success() {
+						uni.showToast({
+							title: "复制电话成功"
+						})
+					}
+				})
+			},
+			clickPhone: function() {
+				uni.setClipboardData({
+					data: this.form.phone,
+					success() {
+						uni.showToast({
+							title: "复制电话成功"
+						})
+					}
+				})
+			},
 			gradeConfirm: function(select) {
 				console.log(select)
 				that.form.grade = select[0].label
@@ -541,6 +541,7 @@
 				that.form.sex = select[0].label
 			},
 			birthConfirm: function(select) {
+				console.log(select)
 				that.form.birth = select.year + "-" + select.month + "-" + select.day
 			},
 			familyStructConfirm: function(select) {
@@ -549,30 +550,17 @@
 			relationshipConfirm: function(select) {
 				that.form.emergencyContactRelationship = select[0].label
 			},							
-			change: function() {
-				
-			},
-			onnodeclick: function() {
-				
-			},
 			checkboxChange: function(e) {
-				if (e.value = false) return
-				this.isWillingPayList.forEach(item => {
-					if (item.name != e.name) item.checked = false;
-				})
+				console.log(e)
 			},
 			checkboxGroupChange: function(e) {
 				console.log(e)
 			},
 			isZjutStudentCheckboxGroupChange: function(e) {
-				
+				console.log(e)
 			},
 			isZjutStudentCheckboxChange: function(e) {
-				if (e.value = false) return
-				this.isZjutStudentList.forEach(item => {
-					if (item.name != e.name) item.checked = false;
-				})
-				
+				console.log(e)
 				this.isZjutStudentList.forEach(item => {
 					if (item.name == e[0]) this.form.isZjutStudent = item.id
 				})
@@ -585,30 +573,12 @@
 			clickBirth: function() {
 				this.birthShow = true
 			},
-			confirmAcademic: function() {
-				if (this.form.academic == '其他') {
-					if (this.customAcademic == '') {
-						uni.showToast({
-							title: "学院不能为空",
-							icon: 'none'
-						})
-						this.academicShow = true
-						return
-					}
-					this.form.academic = this.customAcademic
-					this.customAcademic = ""
-				}
-			},
-			cancel: function() {
-				
-			},
 			submit: function() {
 				that.$refs.uForm.validate(valid => {
 					if (valid) {
 						var sex = getApp().globalData.sexMap[that.form.sex]
-						//var academicId = that.academicMap[that.form.academic]
-						//var gradeId = that.gradeMap[that.form.grade]
-						var academic = that.form.academic
+						var academicId = that.academicMap[that.form.academic]
+						var gradeId = that.gradeMap[that.form.grade]
 						var isZjutStudent
 						this.isZjutStudentList.forEach(item => {
 							if (item.checked == true) isZjutStudent = item.value
@@ -638,7 +608,7 @@
 						if (getApp().globalData.isRegister) {
 							this.$showLoading("更新中")
 							console.log("userApi")
-							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, that.form.grade, academic, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
+							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
 								this.$hideLoding()
 								uni.showToast({
 									title: '更新成功',
@@ -665,7 +635,7 @@
 							// 	return 
 							// }
 							this.$showLoading("注册中")
-							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, that.form.grade, academic, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
+							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, gradeId, academicId, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
 								uni.redirectTo({
 									url: '../index/index'
 								})
@@ -675,7 +645,6 @@
 					} else {
 						
 					}
-					this.customAcademic = ""
 				});
 			}
 		}

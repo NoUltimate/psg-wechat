@@ -46,7 +46,7 @@
 	  			<u-col offset="0.5">
 					<view class="card">
 						<u-swipe-action  :index="index"
-							@content-click="selectJobSchedule" @click="click"
+							@content-click="selectWorkSchedule(index, subscribe.user.id)" @click="click"
 							:options="options"
 							>
 							<view>
@@ -64,9 +64,9 @@
 									<u-row>
 										<u-col span="9">
 											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.user.real_name }}</text><p></p>
-											<text>昵称：{{ subscribe.user.nick_name }}</text><p></p>
+											<!-- <text>昵称：{{ subscribe.user.nick_name }}</text><p></p> -->
 											<text>等级：{{ subscribe.user.rank.name }}</text><p></p>
-											<!-- <text>地址：{{ JSON.parse(subscribe.detail.address).name }}</text> -->
+											<text>地址：线上</text>
 										</u-col>
 										<u-col span="3">
 											<image :src="subscribe.user.avatar_url"></image>
@@ -76,10 +76,10 @@
 								<view v-if="role == 2">
 									<u-row>
 										<u-col span="9">
-											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.user.real_name }}</text><p></p>
-											<text>昵称：{{ subscribe.psy.nick_name }}</text><p></p>
+											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.psy.real_name }}</text><p></p>
+											<!-- <text>昵称：{{ subscribe.psy.nick_name }}</text><p></p> -->
 											<text>等级：{{ subscribe.psy.rank.name }}</text><p></p>
-											<!-- <text>地址：{{ JSON.parse(subscribe.detail.address).name }}</text> -->
+											<text>地址：线上</text>
 										</u-col>
 										<u-col span="3">
 											<image :src="subscribe.psy.avatar_url"></image>
@@ -325,6 +325,13 @@
 				})
 				this.reason = ""
 				this.customReason = ""
+			},
+			selectWorkSchedule: function(index, id) {
+				if (this.role == 2) return
+				console.log(index, id)
+				uni.navigateTo({
+					url:'../user_subscribe_userinfo/user_subscribe_userinfo?userId=' + id
+				})
 			},
 			click: function(index, optionIndex) {
 				console.log(this.subscribeList, index)

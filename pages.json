@@ -128,6 +128,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/user_subscribe_userinfo/user_subscribe_userinfo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
