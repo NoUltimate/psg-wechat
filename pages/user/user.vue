@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<u-top-tips ref="uTips"></u-top-tips>
-<!-- 		<u-action-sheet :list="cancelReasonList" @click="clickCancelReason" v-model="showCancelReason"></u-action-sheet> -->
 		<view class="userinfo">
 			<view class="userinfo-avatar">
 				<image src="../../static/img/user/xinli.png" mode="cover"></image>
@@ -10,25 +9,23 @@
 				<text >心理帮扶团欢迎你</text>
 			</view>
 		</view> 
-		<view>
-			<u-divider>预约单左滑有惊喜</u-divider>
-			<view v-if="hasSubscribe==false" style="height: 500rpx;margin-top: 70rpx;">
-				<u-row>
-					<u-col offset="2">
-						<image style="height: 500rpx;width: 480rpx;" src="../../static/img/user/none.png"></image>
-					</u-col>
-				</u-row>
+		<view style="display: flex;flex-direction: column;">
+			<u-divider>
+				<view v-if="hasSubscribe==true">预约单左滑有惊喜</view>
+				<view v-if="hasSubscribe==false">(๑･∀･๑)</view>
+			</u-divider>
+			<view v-if="hasSubscribe==false" style="margin-top: 50rpx;">
+				<view style="justify-content: center;margin-left: 25rpx;">
+					<image style="height: 550rpx;width: 700rpx;" src="../../static/img/user/none.png"></image>
+				</view>
 			</view>
-			<view v-if="role!=1 && hasSubscribe==false" style="margin-top: 50rpx;">
-					<u-col offset="4" span="6">
-						<text style="text-decoration:underline;font-size: medium;width: 380rpx;" @click="gotoSubscribeNotice">用户预约须知</text>
-					</u-col>
-				</u-row>			  
-				<u-row>
-					<u-col offset="4" span="4">
-						<u-button style="height: 300rpx;width: 380rpx;" shape="square" @click="subscribe">预约</u-button>
-					</u-col>
-				</u-row>
+			<view v-if="role!=1 && hasSubscribe==false" style="margin-top: 50rpx;">		
+				<view style="justify-content: center; display: flex;">
+					<text style="text-decoration:underline;font-size: medium;" @click="gotoSubscribeNotice">用户预约须知</text>
+				</view>
+				<view style="justify-content: center;margin-top: 20rpx;">
+					<button style="width: 200rpx; height: 100rpx" @click="subscribe">预约</button>
+				</view>
 			</view>
 		</view>
 		<view v-for="(subscribe, index) in subscribeList">
@@ -55,8 +52,8 @@
 										<u-col span="1">
 											<image style="width: 50rpx; height: 50rpx;" src="https://742d-t-42b879-1256515311.tcb.qcloud.la/icons/picture.png?sign=486a0d49a1ac7b11a2c4b2509c4f286c&t=1568122069"></image>
 										</u-col>
-										<u-col span="3">
-											<view style="margin-left: 10rpx;">{{ role == 1 ? '用户' : '咨询师' }}</view>
+										<u-col span="8">
+											<view style="margin-left: 10rpx;">{{ role == 1 ? '用户(点击卡片查看用户详情)' : '咨询师' }}</view>
 										</u-col>
 									</u-row>
 								</view>
@@ -64,8 +61,6 @@
 									<u-row>
 										<u-col span="9">
 											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.user.real_name }}</text><p></p>
-											<!-- <text>昵称：{{ subscribe.user.nick_name }}</text><p></p> -->
-											<text>等级：{{ subscribe.user.rank.name }}</text><p></p>
 											<text>地址：线上</text>
 										</u-col>
 										<u-col span="3">
@@ -77,8 +72,6 @@
 									<u-row>
 										<u-col span="9">
 											<text style="font-size: 50rpx;font-weight: 500;">{{ subscribe.psy.real_name }}</text><p></p>
-											<!-- <text>昵称：{{ subscribe.psy.nick_name }}</text><p></p> -->
-											<text>等级：{{ subscribe.psy.rank.name }}</text><p></p>
 											<text>地址：线上</text>
 										</u-col>
 										<u-col span="3">
@@ -92,15 +85,18 @@
 				</u-col>
 			</u-row>
 		</view>
-		<u-modal v-model="show" :show-cancel-button="true" confirm-text="确认"
-			title="请选择取消理由" @cancel="cancel" @confirm="confirmCancelReason">
-			<view style="margin-top: auto;">
-				<uni-data-picker v-model="reason" :localdata="selectReasons" popup-title="请选择预约时间" @change="change" @nodeclick="onnodeclick"></uni-data-picker>
-			</view>
-			<view v-if="reason == '其他理由'">
-				<uni-easyinput type="textarea" autoHeight v-model="customReason" placeholder="请输入取消预约理由"></uni-easyinput>
-			</view>
-		</u-modal>
+		<uni-popup ref="popup" type="dialog">
+		    <uni-popup-dialog mode="input" title="请选择取消理由" :before-close="true" @close="closeCancelReason" @confirm="confirmCancelReason">
+				<view style="margin-top: auto; flex-direction: column;width: 500rpx;">
+					<view style="margin-top: auto;">
+						<uni-data-picker v-model="reason" :localdata="selectReasons" popup-title="请选择预约时间" @change="change" @nodeclick="onnodeclick"></uni-data-picker>
+					</view>
+					<view v-if="reason == '其他理由'">
+						<uni-easyinput type="textarea" autoHeight v-model="customReason" placeholder="请输入取消预约理由"></uni-easyinput>
+					</view>				
+				</view>
+			</uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
@@ -284,6 +280,33 @@
 							})
 						}
 					})
+					// userApi.getUserInfo().then(resp => {
+					// 	console.log(resp.data.is_info_complete, resp.data.is_info_complete == 0)
+					// 	if (resp.data.is_info_complete == 0) {
+					// 		uni.showModal({
+					// 			title: '提示',
+					// 			content: '请先完善个人信息',
+					// 			showCancel: true,//是否显示取消按钮
+					// 			cancelText:"否",//默认是“取消”
+					// 			cancelColor:'skyblue',//取消文字的颜色
+					// 			confirmText:"是",//默认是“确定”
+					// 			confirmColor: 'skyblue',//确定文字的颜色
+					// 			success: function (res) {
+					// 			    if (res.cancel) {
+					// 			        //点击取消,默认隐藏弹框
+					// 			    } else {
+					// 			        //点击确定，取消预约
+					// 			    }
+					// 			},
+					// 			fail: function (res) { },//接口调用失败的回调函数
+					// 			complete: function (res) { },//接口调用结束的回调函数（调用成功、失败都会执行）
+					// 		})
+					// 	} else {
+					// 		uni.navigateTo({
+					// 			url: "/pages/subscribe_message/subscribe_message"
+					// 		})
+					// 	}
+					// })
 				
 				}
 			},
@@ -296,13 +319,15 @@
 			onnodeclick(e) {
 				
 			},
+			closeCancelReason: function() {
+				this.$refs.popup.close()
+			},
 			confirmCancelReason: function(index) {
 				if (this.reason == "") {
 					uni.showToast({
 						title: '请选择取消理由',
 						icon: 'none'
 					});
-					this.show = true
 					return;
 				}
 				var reason = this.reason
@@ -312,7 +337,6 @@
 							title: '请填写取消理由',
 							icon: 'none'
 						});
-						this.show = true
 						return;
 					}
 					reason = this.customReason
@@ -322,9 +346,11 @@
 						
 					})
 					that.refreshSubscribeList()
+					this.$refs.popup.close()
 				})
 				this.reason = ""
 				this.customReason = ""
+				this.$refs.popup.close()
 			},
 			selectWorkSchedule: function(index, id) {
 				if (this.role == 2) return
@@ -342,7 +368,7 @@
 						url:'../user_subscribe_message/user_subscribe_message?subscribeId=' + data.id
 					})
 				} else if (optionIndex == 1) {
-					this.show = true
+					this.$refs.popup.open()
 					this.selectSubscribeId = data.id
 					// uni.showModal({
 					// 	title: '取消预约',

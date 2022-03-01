@@ -51,7 +51,7 @@
 			</uni-group>
 			<uni-group title="问卷调查" top="20">
 				<view v-for="(question, index1) in showQuestionList" :key="index1">
-					<uni-forms-item :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" label-position="top" validate-trigger="bind">
+					<uni-forms-item label-width="300" :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" label-position="top" validate-trigger="bind">
 						<view v-if="isVisible(question)">
 							<view v-if="question.type == 1">
 								<uni-data-checkbox v-model="showQuestionList[index1].value" :localdata="question.config_object.options"  @change="questionOptionChange"></uni-data-checkbox>
@@ -157,6 +157,7 @@
 		onLoad(e) {
 			that = this
 			subscribeApi.getSubscribeById(e.subscribeId).then(resp => {
+				this.$showLoading('加载中')
 				var subscribeData = resp.data
 				var userPeriods = subscribeData.periods.split(",")
 				for(var i = 0; i < userPeriods.length; ++i) {
@@ -191,6 +192,9 @@
 					}
 				})
 				this.showQuestionList = showQuestionList
+				setTimeout(() => {
+					this.$hideLoding()
+				}, 500)
 			})
 		
 

@@ -37,8 +37,22 @@
 		},
 		methods: {
 			gotoUserinfo: function() {
-				uni.navigateTo({
-					url: "/pages/userinfo/userinfo"
+				wx.requestSubscribeMessage({
+					tmplIds: ['8zRniXCqrhYN5RaWMIg_72ZCkF_BfweNQNyvQr2NK8g', 'nciY0QM-FRgySfGOZSnwC7z6D1t6_P43SsSs3rupics'],
+					success(res) {
+						console.log(res)
+						uni.navigateTo({
+							url: "/pages/userinfo/userinfo"
+						})
+					},
+					fail(res) {
+						console.log(res)
+						uni.navigateTo({
+							url: "/pages/userinfo/userinfo"
+						})
+						
+					}
+					
 				})
 			},
 			gotoSubscribeHistory: function() {

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="padding-bottom: 50px;">
 		<u-form :model="form" ref="uForm">
 			<uni-group title="基本信息" top="20">
 				<u-form-item prop="realName" label="姓名" >
@@ -24,29 +24,27 @@
 	<!-- 			<u-form-item prop="nickName" label="昵称" >
 					<u-input v-model="form.nickName" placeholder="请选择昵称"/>
 				</u-form-item> -->
-				<u-form-item prop="sex" label="性别" >
-					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
-				</u-form-item>
 				<u-form-item prop="birth" label="出生年月" label-width="150">
 					<u-input v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请选择出生年月"/>
 					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
 				</u-form-item>
 				<u-form-item prop="age" label="年龄(周岁)" label-width="150" >
-					<u-input :border="border"  v-model="form.age" placeholder="请填写年龄" ></u-input>
+					<u-input  v-model="form.age" placeholder="请填写年龄" ></u-input>
 				</u-form-item>
 				<u-form-item prop="sex" label="性别" >
 					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
 					<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="academic" label="学院" >
-					<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="academicShow = true"></u-input>
+					<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="this.$refs.popup.open()"></u-input>
 				</u-form-item>
-				<u-form-item prop="grade" label="年级" >
-					<u-input :border="border" v-model="form.grade" placeholder="请选择年级 例如本科一"></u-input>
+				<u-form-item prop="grade" label="年级" label-position="top">
+					(例子：本科/硕士/直博/普博/硕博连读+年级/普博延毕)
+					<u-input :border="border" v-model="form.grade" placeholder="请输入年级"></u-input>
 				</u-form-item>
-				<u-form-item prop="schoolIdentity" label="在校身份" label-width="150">
+<!-- 				<u-form-item prop="schoolIdentity" label="在校身份" label-width="150">
 					<u-input :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
-				</u-form-item>
+				</u-form-item> -->
 				<u-form-item prop="familyStruct" label="家庭结构" label-width="150">
 					<u-input :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
 					<u-select @confirm="familyStructConfirm" mode="single-column" v-model="familyStructShow" :list="familyStructList" value-name="id" label-name="name" ></u-select>
@@ -107,7 +105,7 @@
 			<u-button @click="submit">{{buttonText}}</u-button>
 			<!-- <u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select> -->
 			<u-select @confirm="gradeConfirm" mode="single-column" v-model="gradeShow"   :list="gradeList" value-name="id" label-name="name"></u-select>
-			<u-modal v-model="academicShow" :show-cancel-button="true" confirm-text="确认"
+<!-- 			<u-modal :closeOnClickOverlay="true" v-model="academicShow" :show-cancel-button="true" confirm-text="确认"
 				title="请选择学院" @cancel="cancel" @confirm="confirmAcademic">
 				<view style="margin-top: auto;">
 					<uni-data-picker v-model="form.academic" :localdata="selectAcademics" popup-title="请选择学院" @change="change" @nodeclick="onnodeclick"></uni-data-picker>
@@ -115,7 +113,19 @@
 				<view v-if="form.academic == '其他'">
 					<uni-easyinput type="textarea" autoHeight v-model="customAcademic" placeholder="请输入你的学院"></uni-easyinput>
 				</view>
-			</u-modal>
+			</u-modal> -->
+			<uni-popup ref="popup" type="dialog">
+			    <uni-popup-dialog mode="input" title="请选择学院" :before-close="true" @close="closeAcademic" @confirm="confirmAcademic">
+					<view style="margin-top: auto; flex-direction: column;width: 500rpx;">
+						<view>
+							<uni-data-picker style="width: 400px;" v-model="form.academic" :localdata="selectAcademics" popup-title="请选择学院" @change="change" @nodeclick="onnodeclick"></uni-data-picker>
+						</view>
+						<view v-if="form.academic == '其他'">
+							<uni-easyinput type="textarea" autoHeight v-model="customAcademic" placeholder="请输入你的学院"></uni-easyinput>
+						</view>						
+					</view>
+				</uni-popup-dialog>
+			</uni-popup>
 		</u-form>
 	</view>
 </template>
@@ -442,6 +452,7 @@
 					academic: '',
 					sex: '',
 					grade: '',
+					age: '',
 					emergencyContact: undefined
 				},
 				switchVal: false
@@ -452,7 +463,7 @@
 		},
 		onLoad() {
 			that = this
-			
+			this.$showLoading('加载中')
 			this.familyStructList.forEach(item => {
 				this.familyStructMap[item.name] = item.id
 			})
@@ -528,20 +539,24 @@
 				this.form.nickName = userInfo.nickName
 				this.form.sex = getApp().globalData.sexIdMap[userInfo.gender]
 			}
+			setTimeout(() => {
+				this.$hideLoding()
+			}, 500)
 		},
 		methods: {
 			gradeConfirm: function(select) {
 				console.log(select)
 				that.form.grade = select[0].label
-			}, 
-			academicConfirm: function(select) {
-				that.form.academic = select[0].label
 			},
 			sexConfirm: function(select) {
 				that.form.sex = select[0].label
 			},
 			birthConfirm: function(select) {
 				that.form.birth = select.year + "-" + select.month + "-" + select.day
+				console.log(new Date().getFullYear(), parseInt(select.year))
+				if (new Date().getFullYear() > parseInt(select.year)) {
+					that.form.age = new Date().getFullYear() - parseInt(select.year)
+				}
 			},
 			familyStructConfirm: function(select) {
 				that.form.familyStruct = select[0].label
@@ -592,12 +607,21 @@
 							title: "学院不能为空",
 							icon: 'none'
 						})
-						this.academicShow = true
 						return
 					}
 					this.form.academic = this.customAcademic
 					this.customAcademic = ""
+				} else if (this.form.academic == "") {
+					uni.showToast({
+						title: "学院不能为空",
+						icon: 'none'
+					})
+					return
 				}
+				this.$refs.popup.close()
+			},
+			closeAcademic: function() {
+				this.$refs.popup.close()
 			},
 			cancel: function() {
 				

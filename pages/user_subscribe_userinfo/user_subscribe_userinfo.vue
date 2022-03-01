@@ -25,30 +25,27 @@
 					<u-input disabled="true" v-model="form.nickName" placeholder="请选择昵称"/>
 				</u-form-item> -->
 				<u-form-item prop="sex" label="性别" >
-					<u-input disabled="true" :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" ></u-input>
 				</u-form-item>
 				<u-form-item prop="birth" label="出生年月" label-width="150">
-					<u-input disabled="true" v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请选择出生年月"/>
+					<u-input disabled="true" v-model="form.birth" type="select" :select-open="birthShow"  placeholder="请选择出生年月"/>
 					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
 				</u-form-item>
 				<u-form-item prop="age" label="年龄(周岁)" label-width="150" >
 					<u-input disabled="true" :border="border"  v-model="form.age" placeholder="请填写年龄" ></u-input>
 				</u-form-item>
 				<u-form-item prop="sex" label="性别" >
-					<u-input disabled="true" :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别"></u-input>
 					<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="academic" label="学院" >
-					<u-input disabled="true" :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="academicShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" ></u-input>
 				</u-form-item>
 				<u-form-item prop="grade" label="年级" >
-					<u-input disabled="true" :border="border" type="select" :select-open="gradeShow" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"></u-input>
-				</u-form-item>
-				<u-form-item prop="schoolIdentity" label="在校身份" label-width="150">
-					<u-input disabled="true" :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="gradeShow" v-model="form.grade" placeholder="请选择年级" ></u-input>
 				</u-form-item>
 				<u-form-item prop="familyStruct" label="家庭结构" label-width="150">
-					<u-input disabled="true" :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
+					<u-input disabled="true" :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" ></u-input>
 					<u-select @confirm="familyStructConfirm" mode="single-column" v-model="familyStructShow" :list="familyStructList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="phone" label="手机号码" label-width="150">
@@ -87,22 +84,12 @@
 			    	<u-input disabled="true" v-model="form.emergencyContactName" placeholder="请输入联系人名称"/>
 			    </u-form-item>
 				<u-form-item prop="emergencyContactRelationship" label="关系">
-					<u-input disabled="true" type="select" :select-open="relationshipShow" v-model="form.emergencyContactRelationship" placeholder="请点击填写关系" @click="relationshipShow = true"/>
+					<u-input disabled="true" type="select" :select-open="relationshipShow" v-model="form.emergencyContactRelationship" placeholder="请点击填写关系"/>
 					<u-select @confirm="relationshipConfirm" mode="single-column" v-model="relationshipShow"  :list="relationshipList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
 				<u-form-item prop="emergencyContactPhone" label="手机号码" label-width="150">
 					<u-input disabled="true" v-model="form.emergencyContactPhone" placeholder="请输入联系人手机号码" @click="clickEmergencyConcatPhone"/>
 				</u-form-item>
-				<u-checkbox-group v-if="promiseShow" @change="checkboxGroupChange">
-					<u-checkbox v-for="(item,index) in Data"
-						disabled="true"
-						@change="checkboxChange" 
-						v-model="item.checked" 
-						v-for="(item, index) in promiseList" :key="index" 
-						:name="item.name"
-					>{{item.name}}</u-checkbox>我已阅读并同意
-					<text @click='gotoPromise' style='color:red;'>《来访者知情同意书》</text>
-				</u-checkbox-group>
 			</uni-group>
 			<!-- <u-button @click="submit">{{buttonText}}</u-button> -->
 			<u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select>

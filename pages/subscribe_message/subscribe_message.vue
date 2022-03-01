@@ -1,5 +1,5 @@
 <template>
-	<view class="">
+	<view class="" style="padding-bottom: 50px;">
 <!-- 		<u-form :model="form" ref="uForm">
 			<u-form-item prop="realName" label="预约时间段（最多5个）" label-position="top">
 				<uni-collapse ref="collapse">
@@ -40,8 +40,8 @@
 		
 		<uni-forms ref="form" :modelValue="formData" label-width="250" :rules="rules">
 			<uni-group title="预约时间(最多五个)" top="20">
-				<uni-icons type="plus" size="20" @click="addPeriod" ></uni-icons>
-				<uni-icons type="minus" size="20" @click="deletePeriod"></uni-icons>
+				<uni-icons type="plus" size="30" @click="addPeriod" ></uni-icons>
+				<uni-icons type="minus" size="30" @click="deletePeriod"></uni-icons>
 				<view v-for="(period, index1) in periods" :key="index1">
 					<uni-forms-item :name="'periods[' + index1 + '].data'" :label="'预约时间' + (index1 + 1)" label-position="top" :rules="periodRule" validate-trigger="bind">
 						<view>
@@ -74,7 +74,7 @@
 			</uni-forms-item> -->
 			<uni-group title="问卷调查" top="20">
 				<view v-for="(question, index1) in showQuestionList" :key="index1">
-					<uni-forms-item :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" label-position="top" validate-trigger="bind">
+					<uni-forms-item label-width="300" :name="'question[' + index1 + ']'" :label="getQuestionLabel(index1, question)" :rules="questionRule" label-position="top" validate-trigger="bind">
 						<view v-if="isVisible(question)">
 							<view v-if="question.type == 1">
 								<uni-data-checkbox v-model="showQuestionList[index1].value" :localdata="question.config_object.options"  @change="questionOptionChange"></uni-data-checkbox>
@@ -86,8 +86,10 @@
 					</uni-forms-item>
 				</view>
 			</uni-group>
-			<u-button @click="submit(form)">提交</u-button>
 		</uni-forms>
+		<view>
+			<u-button @click="submit(form)" style="margin-bottom: 100rpx;">提交</u-button>
+		</view>
 	</view>
 </template>
 
@@ -297,9 +299,9 @@
 							content: '是否确认预约？',
 							showCancel: true,//是否显示取消按钮
 							cancelText:"否",//默认是“取消”
-							cancelColor:'skyblue',//取消文字的颜色
+							//cancelColor:'skyblue',//取消文字的颜色
 							confirmText:"是",//默认是“确定”
-							confirmColor: 'skyblue',//确定文字的颜色
+							//confirmColor: 'skyblue',//确定文字的颜色
 							success: function (res) {
 							    if (res.cancel) {
 							        //点击取消,默认隐藏弹框
