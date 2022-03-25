@@ -8,7 +8,11 @@
 <!-- 				<u-form-item prop="realName" label="姓名" >
 					<u-input v-model="form.realName" placeholder="请输入真实姓名"/>
 				</u-form-item> -->
-				<u-form-item prop="isZjutStudent" label="是否是浙江大学学生" label-position="top">
+				<u-form-item prop="identity" label="身份" label-width="150">
+					<u-input v-model="form.identity" type="select" :select-open="identityShow" @click="identityShow = true" placeholder="请选择出生年月"/>
+					<u-picker @confirm="identityConfirm" mode="time" v-model="identityShow" :params="params" ></u-picker>
+				</u-form-item>
+<!-- 				<u-form-item prop="isZjutStudent" label="是否是浙江大学学生" label-position="top">
 					<u-checkbox-group @change="isZjutStudentCheckboxGroupChange">
 						<u-checkbox 
 							@change="isZjutStudentCheckboxChange" 
@@ -17,10 +21,7 @@
 							:name="item.name"
 						>{{item.name}}</u-checkbox>
 					</u-checkbox-group>
-				</u-form-item>
-				<u-form-item prop="studentId" label="学号">
-					<u-input v-model="form.studentId" placeholder="请输入学号"/>
-				</u-form-item>
+				</u-form-item> -->
 	<!-- 			<u-form-item prop="nickName" label="昵称" >
 					<u-input v-model="form.nickName" placeholder="请选择昵称"/>
 				</u-form-item> -->
@@ -35,10 +36,13 @@
 					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
 					<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
-				<u-form-item prop="academic" label="学院" >
+				<u-form-item v-if="form.identity=='浙大学生'" prop="academic" label="学院" >
 					<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="this.$refs.popup.open()"></u-input>
 				</u-form-item>
-				<u-form-item prop="grade" label="年级" label-position="top">
+				<u-form-item v-if="form.identity=='浙大学生'" prop="studentId" label="学号">
+					<u-input v-model="form.studentId" placeholder="请输入学号"/>
+				</u-form-item>
+				<u-form-item v-if="form.identity=='浙大学生'" prop="grade" label="年级" label-position="top">
 					(例子：本科/硕士/直博/普博/硕博连读+年级/普博延毕)
 					<u-input :border="border" v-model="form.grade" placeholder="请输入年级"></u-input>
 				</u-form-item>
@@ -55,7 +59,7 @@
 				<u-form-item prop="email" label="邮箱">
 					<u-input v-model="form.email" placeholder="请输入邮箱"/>
 				</u-form-item>
-				<u-form-item prop="isWillingPay" label="是否愿意付费咨询？ 60元/45分钟" label-position="top">
+				<u-form-item v-if="form.identity!='企业用户'" prop="isWillingPay" label="是否愿意付费咨询？ 60元/45分钟" label-position="top">
 					(如果是非浙江大学学生，我们将收取费用；如果是浙大学生，愿意付费的等待咨询排序靠前，愿意付费≠预约之后的正式咨询直接需要付费)
 					<u-checkbox-group  @change="checkboxGroupChange">
 						<u-checkbox 
@@ -105,6 +109,7 @@
 			<u-button @click="submit">{{buttonText}}</u-button>
 			<!-- <u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select> -->
 			<u-select @confirm="gradeConfirm" mode="single-column" v-model="gradeShow"   :list="gradeList" value-name="id" label-name="name"></u-select>
+			<u-select @confirm="identityConfirm" mode="single-column" v-model="identityShow"   :list="identityList" value-name="id" label-name="name"></u-select>
 <!-- 			<u-modal :closeOnClickOverlay="true" v-model="academicShow" :show-cancel-button="true" confirm-text="确认"
 				title="请选择学院" @cancel="cancel" @confirm="confirmAcademic">
 				<view style="margin-top: auto;">
@@ -143,6 +148,7 @@
 				academicShow: false,
 				sexShow: false,
 				birthShow: false,
+				identityShow: false,
 				familyStructShow: false,
 				relationshipShow: false,
 				gradeList: undefined,
@@ -195,6 +201,20 @@
 						checked: false,
 						disabled: false,
 						value: 0
+					}
+				],
+				identityList: [
+					{
+						id: 1,
+						name: '浙大学生'
+					},
+					{
+						id: 2,
+						name: '企业用户'
+					},
+					{
+						id: 3,
+						name: '校外学生用户'
 					}
 				],
 				sexList: [
@@ -358,6 +378,7 @@
 					isWillingPay: [
 						{
 							validator: (rule, value, callback) => {
+								if(that.form.identity == '企业用户') return true;
 								var flag = false
 								that.isWillingPayList.forEach(item => {
 									if (item.checked == true) flag = true;
@@ -385,32 +406,34 @@
 					],
 					studentId: [
 						{
-							required: true,
-							message: '请输入学号',
-							trigger: ['blur']
-						},
-						{
 							validator: (rule, value, callback) => {
-								if (value.length != 8 && value.length != 10) {
-									return false
-								} else {
-									return true
+								if (that.form.identity == '浙大学生' ) {
+									if (value.length != 8 && value.length != 10) {
+										return false
+									} 
 								}
+								return true;
 							},
-							message: '学号位数不正确',
+							message: '学号为空或位数不正确',
 							trigger: ['blur']
 						}
 					],
 					academic: [
 						{
-							required: true,
+							validator: (rule, value, callback) => {
+								if (that.form.identity == '浙大学生' && (value == null || value == '')) return false;
+								 return true;
+							},
 							message: '请选择学院',
 							trigger: ['blur', 'change']
 						}
 					],
 					grade: [
 						{
-							required: true,
+							validator: (rule, value, callback) => {
+								if (that.form.identity == '浙大学生' && (value == null || value == '')) return false;
+								 return true;
+							},
 							message: '请选择年级',
 							trigger: ['blur', 'change']
 						}
@@ -453,6 +476,7 @@
 					sex: '',
 					grade: '',
 					age: '',
+					identity: '浙大学生',
 					emergencyContact: undefined
 				},
 				switchVal: false
@@ -515,7 +539,10 @@
 						if (item.value == user.is_zjut_student) item.checked = true
 					})
 					this.form.birth = user.birth
-					this.form.schoolIdentity = user.school_identity,
+					if (user.identity != null && user.identity != '') {
+						this.form.identity = user.identity
+					}
+					//this.form.schoolIdentity = user.school_identity,
 					this.familyStructList.forEach(item => {
 						if (item.id == user.family_struct) this.form.familyStruct = item.name
 					})
@@ -563,7 +590,13 @@
 			},
 			relationshipConfirm: function(select) {
 				that.form.emergencyContactRelationship = select[0].label
-			},							
+			},
+			identityConfirm: function(select) {
+				that.form.identity = select[0].label
+			},
+			refreshForm: function() {
+				
+			},
 			change: function() {
 				
 			},
@@ -662,7 +695,7 @@
 						if (getApp().globalData.isRegister) {
 							this.$showLoading("更新中")
 							console.log("userApi")
-							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, that.form.grade, academic, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
+							userApi.updateUserInfo(that.form.realName, that.form.nickName, sex, that.form.phone.toString(), that.form.studentId, that.form.grade, academic, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.form.identity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
 								this.$hideLoding()
 								uni.showToast({
 									title: '更新成功',
@@ -689,7 +722,7 @@
 							// 	return 
 							// }
 							this.$showLoading("注册中")
-							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, that.form.grade, academic, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
+							userApi.register(that.form.realName, that.form.realName, sex, that.form.phone.toString(), that.form.studentId, that.form.grade, academic, getApp().globalData.userInfo.avatarUrl, isZjutStudent, that.form.birth, that.form.schoolIdentity, that.form.identity, that.familyStructMap[that.form.familyStruct], that.form.email, isWillingPay, that.form.age, emergencyConcatList).then(resp => {
 								uni.redirectTo({
 									url: '../index/index'
 								})

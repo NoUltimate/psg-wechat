@@ -13,7 +13,7 @@ function getUserInfo(id) {
 	  })
 }
 
-function updateUserInfo(realName, nickName, sex, phone ,studentId, grade, academic, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
+function updateUserInfo(realName, nickName, sex, phone ,studentId, grade, academic, isZjutStudent, birth, schoolIdentity,identity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
 	var data = {
 		sex: sex,
 		real_name: realName,
@@ -25,6 +25,7 @@ function updateUserInfo(realName, nickName, sex, phone ,studentId, grade, academ
 		is_zjut_student: isZjutStudent,
 		birth: birth, 
 		school_identity: schoolIdentity, 
+		identity: identity,
 		family_struct: familyStruct, 
 		email: email, 
 		is_willing_pay: isWillingPay,
@@ -39,7 +40,7 @@ function updateUserInfo(realName, nickName, sex, phone ,studentId, grade, academ
 	})
 }
 
-function register(realName, nickName, sex, phone ,studentId, grade, academic, avatarUrl, isZjutStudent, birth, schoolIdentity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
+function register(realName, nickName, sex, phone ,studentId, grade, academic, avatarUrl, isZjutStudent, birth, schoolIdentity, identity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
   var data = {
     real_name : realName,
 	nick_name : nickName,
@@ -53,6 +54,7 @@ function register(realName, nickName, sex, phone ,studentId, grade, academic, av
 	is_zjut_student: isZjutStudent,
 	birth: birth, 
 	school_identity: schoolIdentity, 
+	identity: identity,
 	family_struct: familyStruct, 
 	email: email, 
 	is_willing_pay: isWillingPay,
