@@ -13,6 +13,28 @@ function getUserInfo(id) {
 	  })
 }
 
+function getUserNavigate() {
+	var data = {
+		
+	}
+	return request({
+		url: '/user/navigate',
+		method: 'post',
+		data
+	})
+}
+
+function getWechatConfig() {
+	var data = {
+		
+	}
+	return request({
+		url: '/user/config',
+		method: 'post',
+		data
+	})
+}
+
 function updateUserInfo(realName, nickName, sex, phone ,studentId, grade, academic, isZjutStudent, birth, schoolIdentity,identity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
 	var data = {
 		sex: sex,
@@ -71,5 +93,7 @@ function register(realName, nickName, sex, phone ,studentId, grade, academic, av
 export default {
 	getUserInfo,
 	register,
-	updateUserInfo
+	updateUserInfo,
+	getWechatConfig,
+	getUserNavigate
 }

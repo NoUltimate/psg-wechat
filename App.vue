@@ -1,11 +1,12 @@
 <script>
+	import userApi from '@/api/user.js'
 	export default {
 		globalData: {
 			openid : '',
 			id: '',
 			role: undefined,
-			appId: 'wx24c08dfddba680a1',
-			secret: '1f5ad42ad61c05a959b23e659a289621',
+			appId: '',
+			secret: '',
 			isReadPromise: false, 
 			isRegister: true,
 			roleMap: {
@@ -32,6 +33,11 @@
 		}, 
 		onLaunch: function() {
 			console.log('App Launch')
+			// userApi.getWechatConfig().then(resp => {
+			// 	this.globalData.appId = resp.data.appid;
+			// 	this.globalData.secret = resp.data.secret;
+			// })
+			
 		},
 		onShow: function() {
 			console.log('App Show')

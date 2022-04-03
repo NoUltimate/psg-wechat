@@ -13,6 +13,7 @@
 <script>
 	import { getOpenid } from '@/api/wechat.js'
 	import { setToken, setOpenid } from "@/utils/auth.js"
+	import userApi from '@/api/user.js'
 	var that
 	export default {
 		data() {
@@ -68,28 +69,33 @@
 				})
 			},
 			userLogin: function() {
-				that.login().then(res => {
-					var systemInfo = uni.getSystemInfoSync()
-					if (!systemInfo.app) {
-						systemInfo.app = "wechat"
-					}
-					getOpenid(getApp().globalData.appId, getApp().globalData.secret, res.code, systemInfo.app).then(resp => {
-						var openid = resp.data.openid
-						getApp().globalData.openid = openid
-						if (resp.code == 400001) {
-							that.isRegister = false
-							getApp().globalData.isRegister = false
-						} else if (resp.code == 400002) {
-							getApp().globalData.token = resp.data.token
-							getApp().globalData.id = resp.data.user.id
-							getApp().globalData.role = resp.data.user.role
-							getApp().globalData.isRegister = true
-							uni.switchTab({
-								url:"/pages/user/user"
-							})
+				userApi.getWechatConfig().then(resp => {
+					getApp().globalData.appId = resp.data.appid;
+					getApp().globalData.secret = resp.data.secret;
+					that.login().then(res => {
+						var systemInfo = uni.getSystemInfoSync()
+						if (!systemInfo.app) {
+							systemInfo.app = "wechat"
 						}
+						getOpenid(getApp().globalData.appId, getApp().globalData.secret, res.code, systemInfo.app).then(resp => {
+							var openid = resp.data.openid
+							getApp().globalData.openid = openid
+							if (resp.code == 400001) {
+								that.isRegister = false
+								getApp().globalData.isRegister = false
+							} else if (resp.code == 400002) {
+								getApp().globalData.token = resp.data.token
+								getApp().globalData.id = resp.data.user.id
+								getApp().globalData.role = resp.data.user.role
+								getApp().globalData.isRegister = true
+								uni.switchTab({
+									url:"/pages/user/user"
+								})
+							}
+						})
 					})
 				})
+				
 			},
 			getUserProfile: function() {
 				uni.getUserProfile({

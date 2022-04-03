@@ -95,9 +95,7 @@
 							content: '是否确认预约？',
 							showCancel: true,//是否显示取消按钮
 							cancelText:"否",//默认是“取消”
-							cancelColor:'skyblue',//取消文字的颜色
 							confirmText:"是",//默认是“确定”
-							confirmColor: 'skyblue',//确定文字的颜色
 							success: function (res) {
 							    if (res.cancel) {
 							        //点击取消,默认隐藏弹框

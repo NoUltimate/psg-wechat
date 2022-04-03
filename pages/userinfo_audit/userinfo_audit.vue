@@ -31,7 +31,7 @@
 	<!-- 			<u-form-item prop="nickName" label="昵称" >
 					<u-input v-model="form.nickName" placeholder="请选择昵称"/>
 				</u-form-item> -->
-				<u-form-item prop="birth" label="出生年月" label-width="150">
+<!-- 				<u-form-item prop="birth" label="出生年月" label-width="150">
 					<u-input v-model="form.birth" type="select" :select-open="birthShow" @click="birthShow = true" placeholder="请选择出生年月"/>
 					<u-picker @confirm="birthConfirm" mode="time" v-model="birthShow" :params="params" ></u-picker>
 				</u-form-item>
@@ -91,7 +91,7 @@
 					</u-form-item>
 				</uni-group>
 			</view> -->
-			<uni-group title="紧急联系人" top="20">
+<!-- 			<uni-group title="紧急联系人" top="20">
 			    <u-form-item prop="emergencyContactName" label="姓名">
 			    	<u-input v-model="form.emergencyContactName" placeholder="请输入联系人名称"/>
 			    </u-form-item>
@@ -118,7 +118,7 @@
 					<text>及</text>
 					<text @click='gotoPrivate' style='color:red;'>《隐私协议》</text>
 				</view>
-			</uni-group>
+			</uni-group> -->
 			<u-button @click="submit">{{buttonText}}</u-button>
 			<!-- <u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select> -->
 			<u-select @confirm="gradeConfirm" mode="single-column" v-model="gradeShow"   :list="gradeList" value-name="id" label-name="name"></u-select>
