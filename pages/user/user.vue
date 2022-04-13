@@ -1,6 +1,5 @@
 <template>
 	<view>
-		<u-top-tips ref="uTips"></u-top-tips>
 		<view class="userinfo">
 			<view class="userinfo-avatar">
 				<image src="../../static/img/user/xinli.png" mode="cover"></image>

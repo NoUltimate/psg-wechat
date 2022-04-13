@@ -24,17 +24,6 @@ function getUserNavigate() {
 	})
 }
 
-function getWechatConfig() {
-	var data = {
-		
-	}
-	return request({
-		url: '/user/config',
-		method: 'post',
-		data
-	})
-}
-
 function updateUserInfo(realName, nickName, sex, phone ,studentId, grade, academic, isZjutStudent, birth, schoolIdentity,identity, familyStruct, email, isWillingPay, age, emergencyConcatList) {
 	var data = {
 		sex: sex,
@@ -94,6 +83,5 @@ export default {
 	getUserInfo,
 	register,
 	updateUserInfo,
-	getWechatConfig,
 	getUserNavigate
 }

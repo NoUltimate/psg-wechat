@@ -40,8 +40,12 @@
 		
 		<uni-forms ref="form" :modelValue="formData" label-width="250" :rules="rules">
 			<uni-group title="预约时间(最多五个)" top="20">
-				<uni-icons type="plus" size="30" @click="addPeriod" ></uni-icons>
-				<uni-icons type="minus" size="30" @click="deletePeriod"></uni-icons>
+				<view style="flex-direction: column;">
+					<view>
+						<uni-icons type="plus" size="30" @click="addPeriod" ></uni-icons>
+						<uni-icons type="minus" size="30" @click="deletePeriod"></uni-icons>
+					</view>
+				</view>
 				<view v-for="(period, index1) in periods" :key="index1">
 					<uni-forms-item :name="'periods[' + index1 + '].data'" :label="'预约时间' + (index1 + 1)" label-position="top" :rules="periodRule" validate-trigger="bind">
 						<view>
@@ -49,6 +53,7 @@
 						</view>
 					</uni-forms-item>
 				</view>
+				<text>注：所选择的预约时间只是预期时间，具体初访或咨询时间心理帮扶团的咨询师会通过短信/电话等方式与您联系确定具体的时间</text>
 			</uni-group>
 <!-- 			<uni-forms-item name="periods" label="预约时间段（最多5个）" >
 				<uni-collapse ref="collapse">

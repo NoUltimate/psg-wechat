@@ -18,6 +18,7 @@
 					<u-input v-model="form.identity" type="select" :select-open="identityShow" @click="identityShow = true" placeholder="请选择出生年月"/>
 					<u-picker @confirm="identityConfirm" mode="time" v-model="identityShow" :params="params" ></u-picker>
 				</u-form-item>
+			</uni-group>
 <!-- 				<u-form-item prop="isZjutStudent" label="是否是浙江大学学生" label-position="top">
 					<u-checkbox-group @change="isZjutStudentCheckboxGroupChange">
 						<u-checkbox 

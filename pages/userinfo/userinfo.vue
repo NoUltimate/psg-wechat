@@ -42,7 +42,7 @@
 					<u-input :border="border" type="select" :select-open="sexShow" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
 					<u-select @confirm="sexConfirm" mode="single-column" v-model="sexShow" :list="sexList" value-name="id" label-name="name" ></u-select>
 				</u-form-item>
-				<u-form-item v-if="form.identity=='浙大学生'" prop="academic" label="学院" >
+<!-- 				<u-form-item v-if="form.identity=='浙大学生'" prop="academic" label="学院" >
 					<u-input :border="border" type="select" :select-open="academicShow" v-model="form.academic" placeholder="请选择学院" @click="this.$refs.popup.open()"></u-input>
 				</u-form-item>
 				<u-form-item v-if="form.identity=='浙大学生'" prop="studentId" label="学号">
@@ -54,7 +54,7 @@
 				</u-form-item> -->
 <!-- 				<u-form-item prop="schoolIdentity" label="在校身份" label-width="150">
 					<u-input :border="border" v-model="form.schoolIdentity" placeholder="请填写在校身份"></u-input>
-				</u-form-item>
+				</u-form-item> -->
 				<u-form-item prop="familyStruct" label="家庭结构" label-width="150">
 					<u-input :border="border" type="select" :select-open="familyStructShow" v-model="form.familyStruct" placeholder="请选择家庭结构" @click="familyStructShow = true"></u-input>
 					<u-select @confirm="familyStructConfirm" mode="single-column" v-model="familyStructShow" :list="familyStructList" value-name="id" label-name="name" ></u-select>
@@ -65,7 +65,7 @@
 				<u-form-item prop="email" label="邮箱">
 					<u-input v-model="form.email" placeholder="请输入邮箱"/>
 				</u-form-item>
-				<u-form-item v-if="form.identity!='企业用户'" prop="isWillingPay" label="是否愿意付费咨询？ 60元/45分钟" label-position="top">
+				<u-form-item v-if="form.identity!='企业用户'" prop="isWillingPay" label="是否愿意付费咨询？50-100元/50分钟" label-position="top">
 					(如果是非浙江大学学生，我们将收取费用；如果是浙大学生，愿意付费的等待咨询排序靠前，愿意付费≠预约之后的正式咨询直接需要付费)
 					<u-checkbox-group  @change="checkboxGroupChange">
 						<u-checkbox 
@@ -120,7 +120,7 @@
 				</view>
 			</uni-group>
 			<u-button @click="submit">{{buttonText}}</u-button>
-			<!-- <u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select> -->
+			<!-- <u-select @confirm="academicConfirm" mode="single-column" v-model="academicShow"  :list="academicList" value-name="id" label-name="name" ></u-select>
 			<u-select @confirm="gradeConfirm" mode="single-column" v-model="gradeShow"   :list="gradeList" value-name="id" label-name="name"></u-select>
 			<u-select @confirm="identityConfirm" mode="single-column" v-model="identityShow"   :list="identityList" value-name="id" label-name="name"></u-select>
 <!-- 			<u-modal :closeOnClickOverlay="true" v-model="academicShow" :show-cancel-button="true" confirm-text="确认"

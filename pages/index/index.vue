@@ -5,7 +5,7 @@
 	    <text class="userinfo-nickname">{{userInfo.nickName}}</text>
 	  </view>
 	  <view style="width:200rpx; margin-left: 260rpx;margin-top: 100px;">
-	  	<button @click="getUserProfile"  type="primary" style="margin-top: 200px;"> 进入 </button>
+	  	<button v-if="isRegister==false" @click="getUserProfile"  type="primary" style="margin-top: 200px;"> 进入 </button>
 	  </view>
 	</view>
 </template>
@@ -69,15 +69,12 @@
 				})
 			},
 			userLogin: function() {
-				userApi.getWechatConfig().then(resp => {
-					getApp().globalData.appId = resp.data.appid;
-					getApp().globalData.secret = resp.data.secret;
 					that.login().then(res => {
 						var systemInfo = uni.getSystemInfoSync()
 						if (!systemInfo.app) {
 							systemInfo.app = "wechat"
 						}
-						getOpenid(getApp().globalData.appId, getApp().globalData.secret, res.code, systemInfo.app).then(resp => {
+						getOpenid(res.code, systemInfo.app).then(resp => {
 							var openid = resp.data.openid
 							getApp().globalData.openid = openid
 							if (resp.code == 400001) {
@@ -94,7 +91,6 @@
 							}
 						})
 					})
-				})
 				
 			},
 			getUserProfile: function() {

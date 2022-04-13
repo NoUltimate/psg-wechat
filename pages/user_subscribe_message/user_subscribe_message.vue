@@ -48,6 +48,9 @@
 						</view>
 					</uni-forms-item>
 				</view>
+				<view style="flex-direction: column;">
+					<text>注：所选择的预约时间只是预期时间，具体初访或咨询时间心理帮扶团的咨询师会通过短信/电话等方式与您联系确定具体的时间</text>
+				</view>
 			</uni-group>
 			<uni-group title="问卷调查" top="20">
 				<view v-for="(question, index1) in showQuestionList" :key="index1">

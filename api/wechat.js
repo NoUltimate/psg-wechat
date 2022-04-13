@@ -1,9 +1,7 @@
 import { request } from '@/utils/request.js'
 
-export function getOpenid(appId, secret, code, app) {
+export function getOpenid(code, app) {
   var data = {
-    app_id : appId,
-	secret : secret,
 	code : code,
 	app : app
   }

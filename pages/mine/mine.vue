@@ -32,7 +32,7 @@
 			that.refresh()
 		},
 		onLoad() {
-			// that = this
+			that = this
 			// userApi.getUserNavigate().then(resp => {
 			// 	var navigateList = resp.data.navigate_list
 				
